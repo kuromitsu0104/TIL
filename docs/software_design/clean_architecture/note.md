@@ -624,9 +624,9 @@
   - 変更する際に要する労力と関連
 - 安定したコンポーネント
   - 多数のコンポーネントから依存されたコンポーネントは安定している（変更しづらいため）
-    ![](/docs/software_design/images/20220824_032605.jpg)
+    ![](/docs/software_design/clean_architecture/images/20220824_032605.jpg)
 - 不安定なコンポーネント
   - 多数のコンポーネントに依存したコンポーネントは不安定（変更しやすいため）
-    ![](/docs/software_design/images/20220824_033213.jpg)
+    ![](/docs/software_design/clean_architecture/images/20220824_033213.jpg)
 
 #### 安定度の指標
