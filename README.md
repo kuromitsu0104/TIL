@@ -9,6 +9,7 @@
 - [Software Design](#software-design)
 - [Database Design](#database-design)
 - [Algorithm](#algorithm)
+- [Qualification](#qualification)
 
 ---
 
@@ -22,4 +23,8 @@
 
 ### Algorithm
 
-- [問題解決のための「アルゴリズム x 数学」が基礎からしっかり身つく本](/docs/algorithm/note.md)
+- [問題解決のための「アルゴリズム x 数学」が基礎からしっかり身つく本](/docs/algorithm/mathematics-algorithm/note.md)
+
+### Qualification
+
+- [基本情報技術者](/docs/qualifications/fe/note.md)
