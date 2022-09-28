@@ -4,9 +4,8 @@
 
 学習記録用リポジトリ
 
-### Categories
+### Categories<!-- omit in toc -->
 
-- [Categories](#categories)
 - [Software Design](#software-design)
 - [Database Design](#database-design)
 - [Algorithm](#algorithm)
