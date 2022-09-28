@@ -1,8 +1,7 @@
 # 概要
 
-## 本
-
-- Clean Architecture 達人に学ぶソフトウェアの構造と設計
+- 書籍名
+  - Clean Architecture 達人に学ぶソフトウェアの構造と設計
 
 # Part1: イントロダクション
 
