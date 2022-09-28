@@ -5,4 +5,4 @@
 - プログラム実行用リポジトリ
   - https://github.com/kuromitsu0104/mathematics-algorithm
 
-# 目次
+# Part1: アルゴリズムと数学の密接なかかわり
