@@ -6,25 +6,31 @@
 
 ### Categories<!-- omit in toc -->
 
-- [Software Design](#software-design)
-- [Database Design](#database-design)
 - [Algorithm](#algorithm)
+- [AWS](#aws)
+- [Database Design](#database-design)
 - [Qualification](#qualification)
+- [Software Design](#software-design)
 
 ---
-
-### Software Design
-
-- [Clean Architecture 達人に学ぶソフトウェアの構造と設計](/docs/software_design/clean_architecture/note.md)
-
-### Database Design
-
-- [SQL アンチパターン](/docs/database_design/sql_antipatterns/note.md)
 
 ### Algorithm
 
 - [問題解決のための「アルゴリズム x 数学」が基礎からしっかり身つく本](/docs/algorithm/mathematics-algorithm/note.md)
 
+### AWS
+
+- RDS
+  - [クレジット枯渇によるパフォーマンス低下問題について](/docs/aws/rds/クレジット枯渇によるパフォーマンス低下問題について/note.md)
+
+### Database Design
+
+- [SQL アンチパターン](/docs/database_design/sql_antipatterns/note.md)
+
 ### Qualification
 
 - [基本情報技術者](/docs/qualifications/fe/note.md)
+
+### Software Design
+
+- [Clean Architecture 達人に学ぶソフトウェアの構造と設計](/docs/software_design/clean_architecture/note.md)
