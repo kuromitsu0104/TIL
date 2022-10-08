@@ -551,10 +551,25 @@
 ## 5.5.1 シングルテーブル継承
 
 - すべてのサブタイプの属性を列に追加して、一つのテーブルに格納する方法
-- ER
+
+  ```mermaid
+  erDiagram
+
+  single_table {
+    bigint issue_id
+    bigint reported_by
+    bigint producti_id
+    string product_id
+    string priority
+    string version_resolved
+    string status
+    string issue_type
+    string severity
+    string version_affected
+    string sponsor
+  }
   ```
-  - 全てのサブタイプを許容する単一テーブル
-  ```
+
 - デメリット
   - 新しいサブタイプが必要なときは、テーブル定義を更新して列を追加する必要あり
   - 列数が RDB の上限と衝突する可能性あり
@@ -565,11 +580,34 @@
 ## 5.5.2 具象テーブル継承
 
 - サブタイプごとにテーブルを作成する方法
-- ER
+
+  ```mermaid
+  erDiagram
+
+  subtype_table_1 {
+    bigint issue_id
+    bigint reported_by
+    bigint producti_id
+    string product_id
+    string priority
+    string version_resolved
+    string status
+    string severity
+    string version_affected
+  }
+
+  subtype_table_2 {
+    bigint issue_id
+    bigint reported_by
+    bigint producti_id
+    string product_id
+    string priority
+    string version_resolved
+    string status
+    string sponsor
+  }
   ```
-  ─ サブタイプテーブル 1
-  ─ サブタイプテーブル 2
-  ```
+
 - メリット
   - サブタイプに存在しない属性を格納する必要がない
 - デメリット
@@ -579,7 +617,34 @@
 ## 5.5.3 クラステーブル継承
 
 - オブジェクト指向のクラスに見立てて、継承を模倣する方法
-- ER
+
+  ```mermaid
+  erDiagram
+  base_table ||--|{ subtype_table_1: ""
+  base_table ||--|{ subtype_table_2: ""
+
+  base_table {
+    bigint issue_id
+    bigint reported_by
+    bigint producti_id
+    string product_id
+    string priority
+    string version_resolved
+    string status
+  }
+
+  subtype_table_1 {
+    bigint issue_id
+    string serverity
+    string version_affected
+  }
+
+  subtype_table_2 {
+    bigint issue_id
+    string sponsor
+  }
+  ```
+
   ```
   - 基底型のテーブル
     ├ サブタイプテーブル 1
@@ -590,10 +655,18 @@
 
 - LOB 列 に JSON データなどの形式で属性名と値を格納する方法
 - サブタイプの数が多い場合、頻繁に新しい属性を追加する場合に有効
-- ER
-  ```
-  単一テーブル.LOB属性
-  ```
+
+  - LOB 列として attributes 列を追加した場合
+
+    ```mermaid
+    erDiagram
+
+    single_table {
+      bigint issue_id
+      text attributes
+    }
+    ```
+
 - メリット
   - 拡張性が極めて高いこと
 - デメリット
@@ -692,13 +765,19 @@
 ## アンチパターン: 複数の列を定義する
 
 - 複数値の数だけテーブルに属性を定義して、「列」として値を格納する方法
-- ER
+
+  ```mermaid
+  erDiagram
+
+  bugs {
+    bigint bug_id
+    string description
+    string tag_1
+    string tag_2
+    string tag_3
+  }
   ```
-  テーブルA
-    - tag_1: string
-    - tag_2: string
-    - tag_3: string
-  ```
+
 - 複数値をカンマ区切りで入力するべきでない(ジェイウォークを参照)を考慮した自然な選択のように思える
 
 ### 値の検索
@@ -749,13 +828,22 @@
 ## 解決策: 従属テーブルを作成する
 
 - 従属テーブルを作成して外部キー制約を定義して、従属テーブルで「行」として複数の値を格納する方法
-- ER
+
+  ```mermaid
+  erDiagram
+
+  bugs ||--o{ tags: ""
+
+  bugs {
+    bigint bug_id PK
+  }
+
+  tags {
+    bigint bug_id FK
+    string tag
+  }
   ```
-  テーブルA
-    - 従属テーブルA
-      - id: integer
-      - tag_name: string
-  ```
+
 - メリット
   - タグの検索が容易であること
   - 複数タグによる AND 条件での検索が容易であること
@@ -847,6 +935,22 @@
   - 普段使われない列や、データサイズの大きな列に対して実行することが多い
 
 ### 従属テーブルの導入
+
+```mermaid
+erDiagram
+
+projects ||--o{ project_histories: ""
+
+projects {
+  bigint project_id PK
+}
+
+project_histories {
+  bigint project_id FK
+  int year
+  int bugs_fixed
+}
+```
 
 - ER
   ```
@@ -982,14 +1086,23 @@
 ## 解決策: 限定する値をデータで指定する
 
 - 方法
+
   - 参照テーブルを新たに作成して、status 列に値を格納
   - 参照テーブルを参照するような外部キー制約を定義して、参照テーブルの status 列を参照
-- ER
+
+  ```mermaid
+  erDiagram
+
+  bugs ||--|| bug_status: ""
+
+  bugs {
+    string status FK
+  }
+
+  bug_status {
+    string status PK
+  }
   ```
-  - Bugテーブル
-    - status: integer (外部キー制約, BugStatus.statusを参照)
-  - BugStatusテーブル
-    - status: string
-  ```
+
 - メリット
   - 外部キー制約による参照整合性により、BugStatus テーブルに存在する値のみ格納できるようになる
