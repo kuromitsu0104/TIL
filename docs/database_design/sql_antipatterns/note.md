@@ -254,10 +254,19 @@
 ## 2.2 アンチパターン: 常に親のみに依存する
 
 - 隣接リストと呼ばれる手法
+- ER
+
+  ```mermaid
+  erDiagram
+
+  bugs ||--o{ comments: ""
+  comments }o--|| comments: ""
+  ```
+
+  ![](/docs/database_design/sql_antipatterns/images/20220829_004841.jpg)
+
 - 各エントリに`parent_id`を持たせる
 - `parent_id`には`comment_id`を入力
-  ![](/docs/database_design/sql_antipatterns/images/20220829_004341.jpg)
-  ![](/docs/database_design/sql_antipatterns/images/20220829_004841.jpg)
 
 ## 2.2.1 隣接リストへのクエリ実行
 
@@ -484,17 +493,41 @@
 
 ## 5.1 目的: 可変属性をサポートする
 
-- 資料
-  ![](/docs/database_design/sql_antipatterns/images/20220917_173358.jpg)
-  ![](/docs/database_design/sql_antipatterns/images/20220917_173409.jpg)
 - エンティティの属性を別テーブルに切り出す設計のことを、エンティティ・アトリビュート・バリュー(EAV)と呼ぶ
-- EAV テーブルのカラム
-  - id
-    - 外部キー制約
-  - entitiy
-    - 属性の名前
-  - value
-    - 属性の値
+- ER
+
+  ```mermaid
+  erDiagram
+
+  issues ||--o{ issue_attributes: ""
+
+  issues {
+    bigint issue_id PK
+  }
+
+  issue_attributes {
+    bigint issue_id FK
+    string entity
+    string value
+  }
+  ```
+
+  - 備考
+    - entity: 属性の名前
+    - value: 属性の値
+  - レコード例
+
+    - issue_attributes
+
+      | issue_id | entity             | value                |
+      | -------- | ------------------ | -------------------- |
+      | 1234     | 'status'           | 'NEW'                |
+      | 1234     | 'description'      | '保存処理に失敗する' |
+      | 1234     | 'reported_by'      | 'Bill'               |
+      | 1234     | 'version_affected' | '1.0'                |
+      | 1234     | 'severity'         | '機能の損失'         |
+      | 1234     | 'priority'         | 'HIGH'               |
+
 - EAV のメリット
   - エンティティの列数を減らせる
   - エンティティの属性を簡単に追加可能
@@ -620,11 +653,11 @@
 
   ```mermaid
   erDiagram
-  base_table ||--|{ subtype_table_1: ""
-  base_table ||--|{ subtype_table_2: ""
+  issues ||--|{ bugs: ""
+  issues ||--|{ feature_requests: ""
 
-  base_table {
-    bigint issue_id
+  issues {
+    bigint issue_id PK
     bigint reported_by
     bigint producti_id
     string product_id
@@ -633,22 +666,16 @@
     string status
   }
 
-  subtype_table_1 {
-    bigint issue_id
+  bugs {
+    bigint issue_id FK
     string serverity
     string version_affected
   }
 
-  subtype_table_2 {
-    bigint issue_id
+  feature_requests {
+    bigint issue_id FK
     string sponsor
   }
-  ```
-
-  ```
-  - 基底型のテーブル
-    ├ サブタイプテーブル 1
-    ∟ サブタイプテーブル 2
   ```
 
 ## 5.5.4 半構造化データ
@@ -663,6 +690,7 @@
 
     single_table {
       bigint issue_id
+      string hoge_column
       text attributes
     }
     ```
@@ -732,8 +760,17 @@
 
 ### 交差テーブルの作成
 
-- 資料
-  ![](/docs/database_design/sql_antipatterns/images/20220930_172408.jpg)
+- ER
+
+  ```mermaid
+  erDiagram
+
+  comments ||--o{ bugs_comments: ""
+  comments ||--o{ feature_comments: ""
+  bugs_comments }o--|| bugs: ""
+  feature_comments }o--|| feature_requests: ""
+  ```
+
 - メリット
   - issue_type 列が不要になる
   - 参照整合性を担保できる
@@ -749,10 +786,18 @@
 
 ### 共通の親テーブルの作成
 
-- 資料
-  ![](/docs/database_design/sql_antipatterns/images/20220930_174301.jpg)
 - 共通の親テーブルとして、基底テーブルを作成して関連させる方法
   - 同じようなエンティティが複数の親テーブルを参照させたいときは、基底テーブルというエンティティを定義できる可能性がある
+- ER
+
+  ```mermaid
+  erDiagram
+
+  issues ||--o| bugs: ""
+  issues ||--o{ comments: ""
+  issues ||--o| reature_requests: ""
+  ```
+
 - メリット
   - 外部キー制約を定義できること
 
@@ -1093,7 +1138,7 @@ project_histories {
   ```mermaid
   erDiagram
 
-  bugs ||--|| bug_status: ""
+  bugs }|--|| bug_status: ""
 
   bugs {
     string status FK
