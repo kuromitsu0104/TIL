@@ -29,7 +29,7 @@
 
 ### Qualification
 
-- [基本情報技術者](/docs/qualifications/fe/note.md)
+- [基本情報技術者](/docs/qualifications/基本情報技術者/note.md)
 
 ### Software Design
 
