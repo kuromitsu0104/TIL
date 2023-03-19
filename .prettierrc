@@ -1,0 +1,15 @@
+# *snip*
+overrides:
+  - files:
+      - "*.md"
+      - README
+    options:
+      parser: markdown-nocjsp
+      plugins:
+        - "./node_modules/prettier-plugin-md-nocjsp"
+  - files:
+      - "*.mdx"
+    options:
+      parser: mdx-nocjsp
+      plugins:
+        - "./node_modules/prettier-plugin-md-nocjsp"

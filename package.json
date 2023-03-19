@@ -1,0 +1,24 @@
+{
+  "name": "resume",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "directories": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://kuromitsu0104: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@github.com/kuromitsu0104/resume.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kuromitsu0104/resume/issues"
+  },
+  "homepage": "https://github.com/kuromitsu0104/resume#readme",
+  "devDependencies": {
+    "prettier": "2.8.4",
+    "prettier-plugin-md-nocjsp": "^1.5.1"
+  }
+}
