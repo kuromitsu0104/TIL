@@ -1865,8 +1865,16 @@ flowchart LR
 
     ```ruby
     class BookResponse
+      attr_reader :author, ...
+
+      def initialize(attributes) # type: Hash
+        @author = attributes["author"]
+        ...
+      end
+
       def fromBook(book) # type: Book < ApplicationRecord
         # BookオブジェクトからBookResponseを生成する
+        new(author: book.author, ...)
       end
     end
     ```
@@ -1885,6 +1893,7 @@ flowchart LR
 
       def toBook()
         # BookRequestからBookオブジェクトを生成する
+        Book.new(author: author, ...)
       end
     end
     ```
