@@ -2,10 +2,8 @@
 
 - 書籍名
   - プログラミングTypeScript
-
-# 学習用リポジトリ<!-- omit in toc -->
-
-https://github.com/kuromitsu0104/programming-typescript
+- 学習用リポジトリ
+  - https://github.com/kuromitsu0104/programming-typescript
 
 # 目次<!-- omit in toc -->
 
