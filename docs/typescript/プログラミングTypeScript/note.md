@@ -183,7 +183,40 @@
 
 ## 2.1 コンパイラー
 
+- TypeScriptのソースコードのコンパイル順序
+
+  ```mermaid
+  graph LR
+    subgraph TS
+      style A text-align:left
+      A["1. TypeScriptソース -> TypeScript AST<br>
+        1. ASTが型チェッカーによってチェックされる<br>
+        2. TypeScript AST -> JavaScriptソース"]
+    end
+
+    subgraph JS
+      style B text-align:left
+      B["1. JavaScriptソース -> JavaScript AST<br>
+        2. AST -> バイトコード<br>
+        3. バイトコードがランタイムによって評価される"]
+    end
+
+    A --> B
+  ```
+
 ## 2.2 型システム
+
+- アノテーション
+
+  ```ts
+  let a: number = 1; // a is number.
+  ```
+
+- 推論
+
+  ```ts
+  let a = 1; // a is number.
+  ```
 
 ### 2.2.1 TypeScript対JavaScript
 
@@ -514,3 +547,7 @@
 ## 12.6 まとめ
 
 # 13章 終わりに
+
+```
+
+```
