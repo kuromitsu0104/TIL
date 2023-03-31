@@ -209,16 +209,18 @@
 - アノテーション
 
   ```ts
-  let a: number = 1; // a is number.
+  let a: number = 1 // a is number.
   ```
 
 - 推論
 
   ```ts
-  let a = 1; // a is number.
+  let a = 1 // a is number.
   ```
 
 ### 2.2.1 TypeScript対JavaScript
+
+- TypeScript = 漸進的型付き言語
 
 ## 2.3 コードエディターのセットアップ
 
