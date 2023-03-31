@@ -252,6 +252,20 @@
 
 ### 3.2.7 symbol
 
+```ts
+let a = Symbol('a') // symbol
+let b: symbol = Symbol('b') // symbol
+```
+
+- symbol型は一意となる
+- 同じ値のsymbol型でも一致しない
+
+  ```ts
+  let a = Symbol('a') // symbol
+  let b = Symbol('a') // symbol
+  console.log(a === b) //=> false
+  ```
+
 ### 3.2.8 オブジェクト
 
 ### 3.2.9 型エイリアス、合併、交差
