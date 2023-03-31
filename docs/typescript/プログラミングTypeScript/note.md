@@ -190,15 +190,15 @@
     subgraph TS
       style A text-align:left
       A["1. TypeScriptソース -> TypeScript AST<br>
-        1. ASTが型チェッカーによってチェックされる<br>
-        2. TypeScript AST -> JavaScriptソース"]
+         2. ASTが型チェッカーによってチェックされる<br>
+         3. TypeScript AST -> JavaScriptソース"]
     end
 
     subgraph JS
       style B text-align:left
       B["1. JavaScriptソース -> JavaScript AST<br>
-        2. AST -> バイトコード<br>
-        3. バイトコードがランタイムによって評価される"]
+         2. AST -> バイトコード<br>
+         3. バイトコードがランタイムによって評価される"]
     end
 
     A --> B
