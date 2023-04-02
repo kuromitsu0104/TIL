@@ -268,15 +268,261 @@ let b: symbol = Symbol('b') // symbol
 
 ### 3.2.8 オブジェクト
 
+- TypeScriptではプロパティの型が一致すれば、同じ型扱いとなる
+
+  ```ts
+  let c: {
+    firstName: string
+    lastName: string
+  } = {
+    firstName: 'john',
+    lastName: 'barrowman',
+  }
+
+  class Person {
+    firstName: string
+    lastName: string
+
+    constructor(firstName: string, lastName: string) {
+      this.firstName = firstName
+      this.lastName = lastName
+    }
+  }
+
+  c = new Person('matt', 'smith') // c変数の型にマッチするため代入可能
+  ```
+
+- string || undefined なプロパティ
+
+  ```ts
+  let a: {
+    b?: string
+    c: string
+  } = {
+    b: 'hoge'
+    c: 'fuga'
+  }
+  ```
+
+- インデックスシグネチャ
+
+  - 任意のキーを持つプロパティを任意の数だけ持たせる
+
+  ```ts
+  let a: {
+    [key: number]: boolean
+  } = {
+    12: true,
+    24: false,
+  }
+  ```
+
+- readonly
+
+  - 読み取り専用のプロパティ
+
+  ```ts
+  let user: {
+    readonly firstName: string
+  } = {
+    firstName = 'hoge', // ok
+  }
+
+  user.firstname = 'fuga' // error
+  ```
+
 ### 3.2.9 型エイリアス、合併、交差
+
+- 型エイリアス
+
+  ```ts
+  type Age = number
+  type Person = {
+    name: string
+    age: Age // Ageはnumberのエイリアス
+  }
+
+  let age: Age = 20
+  let driver: Person = {
+    name: 'hoge',
+    age: age, // Age型とnumber型を割り当て可能
+  }
+  ```
+
+  - 型エイリアスの目的
+    - 複雑な型定義をDRYにする
+    - 型を命名することで可読性を高める
+
+- 合併型と交差型
+
+  - 型定義の例
+
+    ```ts
+    type Kick = {
+      effect: boolean
+      hit: boolean
+    }
+
+    type Punch = {
+      hit: boolean
+      damage: number
+    }
+
+    type KickOrPunch = Kick | Punch
+    type KickAndPunch = Kick & Punch
+    ```
+
+  - 合併型
+
+    ```ts
+    // 合併型なので、Kick, Punch型両方のプロパティが使える
+    const SuperAtack: KickOrPunch = {
+      effect: true,
+      hit: true,
+      damage: 10,
+    }
+
+    // 合併型なため、どちらかの型ということを表せれば良い
+    const normalAtack: KickOrPunch = {
+      hit: true,
+      damage: 3,
+    }
+
+    // 交差型なので、合併型同様Kick, Punch型両方のプロパティが使える
+    const doubleAtack: KickAndPunch = {
+      effect: true,
+      hit: true,
+      damage: 10,
+    }
+    ```
+
+  - 交差型
+    ```ts
+    // 交差型は集合元の型全てのプロパティを使わなくてはならない
+    const errorNormalAtack: KickAndPunch = {
+      hit: true,
+      damage: 3,
+    }
+    // エラー: Kick typeのeffectプロパティがないため
+    ```
 
 ### 3.2.10 配列
 
+- TypeScriptで配列を取り扱う時の注意点
+  - 配列内の全ての要素が同じ型を持つようにプログラムを設計すること
+
 ### 3.2.11 タプル
+
+- タプル(tuple)は配列のサブタイプ(派生型)
+
+  - 固定長の配列を型付けするための方法
+
+    ```ts
+    let a: [number, string] = [1, '1']
+    a = [2, '2']
+    ```
+
+  - 省略オブションも存在する
+
+    ```ts
+    let a: [number, string?][] = [[1, '1']]
+    a = [[2, '2'], [3]]
+    ```
+
+  - 可変長の要素にも対応
+
+    - 空配列の可能性のある数値を持つ配列
+
+      ```ts
+      let numbers: [...number[]] = []
+      numbers = [1]
+      ```
+
+    - 少なくとも1つ以上の数値を持つ配列
+
+      ```ts
+      let numbers: [number, ...number[]] = [1, 2, 3, 4]
+      numbers = [] // error
+      ```
+
+    - 不均一なリスト
+
+      ```ts
+      let uneven_list: [string, boolean, ...numbers[]] = ['1', true, 2]
+      uneven_list = ['2', false]
+      ```
+
+- タプル型のメリット
+
+  - 不均一なリストを安全にコード化できること
+  - リスト長を限定できること
+
+- readonly修飾子
+
+  - 配列の要素を読み取り専用にして変更できないようにする
+  - 読み取り専用の配列
+
+    ```ts
+    let a: readonly number[] = [1, 2, 3]
+    a = [5] // error
+    ```
+
+  - 読み取り専用のタプル
+
+    ```ts
+    let a: readonly [...number] = [1, 2, 3]
+    a = [] // error
+    ```
 
 ### 3.2.12 null、undefined、void、never
 
+- undefined: 未定義であること（値がまだ割り当てられていない変数）
+- null: 値が欠如していること（値の欠如）
+- void: 明示的に何も返却しない関数の型のこと（return文を持たない関数の戻り値）
+  - 例: `#console.log`
+- never: 決して値を戻すことのない関数の型のこと（決して戻ることのない関数の戻り値）
+  - 例: 例外返却、無限ループ
+
 ### 3.2.13 列挙型
+
+- enum(列挙型)は、慣習として大文字で始まる単数系で表す
+
+  ```ts
+  enum Language {
+    Japanese,
+    English,
+    Spanish,
+  }
+  ```
+
+- `const enum`で危険なアクセスを防ぐ
+
+  - constを使用しない場合
+
+    ```ts
+    enum Language {
+      Japanese,
+      English,
+      Spanish,
+    }
+
+    Language[4] // エラーは発生せず、undefinedを返却する（危険な挙動）
+    ```
+
+  - constを使用する場合
+
+    ```ts
+    enum Language {
+      Japanese,
+      English,
+      Spanish,
+    }
+
+    Language[4] // error
+    ```
+
+- 列挙型は安全に使用することが難しいため利用を控えるべき
+- constでないenumは論外
 
 ## 3.3 まとめ
 
