@@ -532,7 +532,118 @@ let b: symbol = Symbol('b') // symbol
 
 ## 4.1 関数の宣言と呼び出し
 
+- パラメータのアノテーションは必須（推論してくれない）
+
+  ```ts
+  function add(a: number, b: number) {
+    return a + b
+  }
+  ```
+
+- 戻り値のアノテーションは任意（推論してくれる）
+
+  - 戻り値を推論させる
+
+    ```ts
+    function add(a: number, b: number) {
+      return a + b
+    }
+    ```
+
+  - 戻り値をアノテーションする
+
+    ```ts
+    function add(a: number, b: number): number {
+      return a + b
+    }
+    ```
+
+- 関数を宣言する方法
+
+  - 名前付き関数
+
+    ```ts
+    function greet(name: string) {
+      return name
+    }
+    ```
+
+  - 関数式
+
+    ```ts
+    let greet = function (name: string) {
+      return name
+    }
+    ```
+
+  - アロー関数式
+
+    ```ts
+    let greet = (name: string) => {
+      return name
+    }
+    ```
+
+  - アロー関数式の省略記法
+
+    ```ts
+    let greet = (name: string) => name
+    ```
+
+  - 関数コンストラクター(非推奨)
+
+    ```ts
+    let greet = new Function('name', 'return name')
+    ```
+
+- 用語
+  - パラメータ（仮パラメータ）
+    - 関数宣言の一部として宣言するもの
+    - 引数の値でパラメータは初期化される
+  - 引数（実パラメータ）
+    - 関数を呼び出すときに渡すデータのこと
+
 ### 4.1.1 オプションパラメーターとデフォルトパラメーター
+
+- オプショナルパラメータを利用する場合
+
+  ```ts
+  function log(message: string, userId?: string) {
+    ...
+  }
+
+  log('メッセージ', '1234')
+  log('メッセージ') // オプショナルな引数の受け渡しは任意
+  ```
+
+- デフォルトパラメータを利用する場合
+
+  ```ts
+  function log(message: string, userId = 'Not Signed in') {
+    ...
+  } // オプショナルなアノテーションが不要になる
+
+  log('メッセージ', '1234')
+  log('メッセージ') // デフォルト値を利用
+  ```
+
+- デフォルトパラメータをアノテーションする場合
+
+  ```ts
+  type Context = {
+    userId?: string
+    appId?: string
+  }
+
+  function log(message: string, context: Context = {}) {
+    ...
+  }
+
+  log('メッセージ', { userId: '1234', appId: '5678' })
+  log('メッセージ') // デフォルト値を利用
+  ```
+
+- オプションパラメータよりも、デフォルトパラメータを利用することが多い
 
 ### 4.1.2 レストパラメーター
 
