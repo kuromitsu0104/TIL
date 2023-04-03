@@ -647,9 +647,30 @@ let b: symbol = Symbol('b') // symbol
 
 ### 4.1.2 レストパラメーター
 
+- 可変長引数の関数を安全に型付けする方法
+
+  ```ts
+  function hoge(...numbers: number[]): number[] {
+    return numbers
+  }
+  ```
+
+- argumentsオブジェクトで可変長引数を受け取る方法だと、型安全にならない
+
+  ```ts
+  function hoge(): number[] {
+    return arguments // argumentsで可変長引数を参照できる
+  }
+  ```
+
 ### 4.1.3 call、apply、bind
 
+- JavaScriptでは関数を呼び出す方法が複数存在する
+
 ### 4.1.4 thisの型付け
+
+- クラスメソッドを除いて、すべての場所で`this`を禁止するチームが多い
+  - `tsconfig.json`の`no-invalid-this`オプションで禁止できる
 
 ### 4.1.5 ジェネレーター
 
