@@ -670,13 +670,63 @@ let b: symbol = Symbol('b') // symbol
 ### 4.1.4 thisの型付け
 
 - クラスメソッドを除いて、すべての場所で`this`を禁止するチームが多い
-  - `tsconfig.json`の`no-invalid-this`オプションで禁止できる
+- thisを明示的にアノテーションする方法
+
+  ```ts
+  function month(this: Date) {
+    return this.getMonth()
+  }
+  month.call() // error
+  month.call(new Date) // ok
+  ```
+
+- tsconfig.jsonのオプション
+  - `no-invalid-this`: `this`を禁止にする
+  - `noImplicitThis`: `this`の明示的なアノテーションを強制する
 
 ### 4.1.5 ジェネレーター
+
+- 一連の値を生成するための方法
+
+  ```ts
+  function* countFrom(n) {
+    while (true) {
+      yield n;
+      n++
+    }
+  }
+
+  const counter = countFrom(1)
+
+  console.log(counter.next().value) // 1
+  console.log(counter.next().value) // 2
+  console.log(counter.next().value) // 3
+  ```
+
+- ジェネレータを明示的にアノテートする方法
+
+  ```ts
+  function* countFrom(n): Generator<number> {
+    while (true) {
+      yield n;
+      n++
+    }
+  }
+  ```
 
 ### 4.1.6 イテレーター
 
 ### 4.1.7 呼び出しシグネチャ
+
+- Function型を明示的にアノテーションする方法
+
+  ```ts
+  type Log = (message: string, userId?: string) => void
+
+  let log: Log = ('hoge', '1234') => {
+    console.log(message, userId)
+  }
+  ```
 
 ### 4.1.8 文脈的型付け
 
