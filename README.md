@@ -9,9 +9,10 @@
 - [Algorithm](#algorithm)
 - [AWS](#aws)
 - [Database Design](#database-design)
+- [Framework](#framework)
+- [Language](#language)
 - [Qualification](#qualification)
 - [Software Design](#software-design)
-- [TypeScript](#typescript)
 
 ---
 
@@ -28,6 +29,15 @@
 
 - [SQL アンチパターン](/docs/database_design/sql_antipatterns/note.md)
 
+### Framework
+
+### Language
+
+- TypeScript
+  - [プログラミングTypeScript](/docs/language/typescript/プログラミングTypeScript/note.md)
+- English
+  - [総合英語フォレスト](/docs/language/english/総合英語フォレスト.md)
+
 ### Qualification
 
 - [基本情報技術者](/docs/qualifications/基本情報技術者/note.md)
@@ -37,7 +47,3 @@
 - [Clean Architecture 達人に学ぶソフトウェアの構造と設計](/docs/software_design/clean_architecture/note.md)
 - [現場で役立つシステム設計の原則](/docs/software_design/現場で役立つシステム設計の原則/note.md)
 - [マイクロサービスにおける分散トランザクションについて](/docs/software_design/マイクロサービスにおける分散トランザクションについて/note.md)
-
-### TypeScript
-
-- [プログラミングTypeScript](/docs/typescript/プログラミングTypeScript/note.md)
