@@ -36,7 +36,7 @@
 - TypeScript
   - [プログラミングTypeScript](/docs/language/typescript/プログラミングTypeScript/note.md)
 - English
-  - [総合英語フォレスト](/docs/language/english/総合英語フォレスト.md)
+  - [総合英語フォレスト](/docs/language/english/総合英語フォレスト/note.md)
 
 ### Qualification
 
