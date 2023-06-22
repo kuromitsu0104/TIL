@@ -13,6 +13,7 @@
 - [Language](#language)
 - [Qualification](#qualification)
 - [Software Design](#software-design)
+- [TypeScript](#typescript)
 
 ---
 
@@ -47,3 +48,8 @@
 - [Clean Architecture 達人に学ぶソフトウェアの構造と設計](/docs/software_design/clean_architecture/note.md)
 - [現場で役立つシステム設計の原則](/docs/software_design/現場で役立つシステム設計の原則/note.md)
 - [マイクロサービスにおける分散トランザクションについて](/docs/software_design/マイクロサービスにおける分散トランザクションについて/note.md)
+- [達人プログラマー](/docs/software_design/達人プログラマー/node.md)
+
+### TypeScript
+
+- [プログラミングTypeScript](/docs/typescript/プログラミングTypeScript/note.md)
