@@ -10,7 +10,7 @@
 # 学習アウトプット<!-- omit in toc -->
 
 - [ ] 新たな視点や勘所、キーワードについて整理し、読書メモとしてリポジトリに残す
-- [ ] これまでの開発経験と比較して、自然に体現できている部分と、改善すべき部分を言語化する([技術記事化](/kuroweb/zenn/articles/the-pragmatic-programmer.md))
+- [ ] これまでの開発経験と比較して、自然に体現できている部分と、改善すべき部分を言語化する([技術記事化](https://github.com/kuroweb/zenn/blob/master/articles/the-pragmatic-programmer.md))
 
 # 目次<!-- omit in toc -->
 
