@@ -9,6 +9,7 @@
 
 # 学習アウトプット<!-- omit in toc -->
 
+- [ ] Kubernetesの基礎知識やキーワードを整理してリポジトリに反映する
 - [ ] 「Rails + Nginx」をminikube上で実行する
 - [ ] 上記の構築手順を技術記事にして公開する
 
@@ -128,9 +129,78 @@
 
 ## 2.1 Kubernetes とは
 
+- Kubernetes Node
+  - 実際にコンテナが動作するノード（物理マシン, 仮想マシン）
+- Kubernetes Master
+  - Kubernetes Nodeを管理するノード
+
 ## 2.2 Kubernetes の歴史
 
 ## 2.3 Kubernetes を使うと何ができるのか
+
+- コンテナ運用の課題
+  - 複数のKubernetes Nodeの管理
+  - コンテナのスケジューリング
+  - ローリングアップデート
+  - スケーリング・オートスケーリング
+  - コンテナの死活監視
+  - 障害時のセルフヒーリング
+  - ロードバランシング
+  - データの管理
+  - ワークロードの管理
+  - ログの管理
+  - IaC
+  - その他エコシステムとの連携や拡張
+- ワークロード
+  - Kubernetes上で実行中のアプリケーションのこと
+- マニフェストファイルで宣言的にリソースを管理できる(IaC)
+  - .yaml形式で管理することが多い
+- コンテナのレプリカを自動増減（オートスケール）することで、負荷分散や耐障害性を確保できる
+- スケジューリング
+  - どのKubernetes Nodeにコンテナを配置するのか判断するステップのこと
+  - Affinity, Anti-Affinity機能
+- リソース管理
+  - Kubernetes NodeのCPUやメモリの空リソースをみて、Kubernetesが自動的に判断して実行する（ユーザーが管理する必要なし）
+  - クラスタオートスケール機能では、Kubernetes Node自体の増減も自動的に行える
+- セルフヒーリング
+  - Kubernetesがコンテナのプロセス監視を行う
+  - プロセス停止を検知するとコンテナを再デプロイする
+  - Kubernetes Nodeに障害が発生しても、アプリケーションを自動復旧するようなつくり
+- ロードバランシング機能
+  - Service, Ingressなどの機能が存在する
+  - アプリケーションのコンテナ群に対してルーティングを行うエンドポイントを払い出す
+  - オートスケールや障害発生時には、Kubernetesが自動的に切り替える
+  - Service
+    - サービスディスカバリが可能
+    - マイクロサービスアーキテクチャに効果的
+    - 各サービスのマニフェストファイルを元に、システム全体を簡単に連携できる
+- データの管理
+  - データストアにetcdを採用している(KVS)
+    - マニフェストファイルやServiceなどを保持する
+    - 認証情報や設定ファイルなどを保持できる仕組みもあるため、Kubernetes上で集中管理できる
+- サードパーティ連携
+  - Ansible
+    - Kubernetesへのコンテナのデプロイ
+  - Apache Ignite
+    - Kubernetesのサービスディスカバリを利用したクラスタ形成とスケーリング
+  - Fluentd
+    - Kubernetes上のコンテナのログを転送
+  - GitLab
+    - CI/CDを実現するための一連の様々なツールとKubernetesの統合
+  - Jenkins
+    - ジョブ実行時にジョブワーカー用のコンテナをKubernetesにデプロイ
+  - Prometheus
+    - Kubernetesのモニタリング
+  - Spark
+    - ジョブをKubernetes上でネイティブ実行（YARN代替）
+  - Spinnaker
+    - Kubernetesへのコンテナのデプロイ
+  - Kubeflow
+    - Kubernetes上にML Platformをデプロイ
+  - Rook
+    - Kubernetes上に分散ファイルシステムをデプロイ
+  - Vitess
+    - Kubernetes上にMySQLクラスタをデプロイ
 
 ## 2.4 まとめ
 
