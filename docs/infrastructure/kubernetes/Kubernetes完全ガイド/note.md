@@ -206,6 +206,18 @@
 
 # 第3章 Kubernetes 環境の選択肢
 
+- ローカルKubernetes
+  - Minikube
+  - Docker Desktop
+  - kind (Kubernetes in Docker)
+- Kubernetes構築ツール
+  - kubeadm
+  - Rancher
+- パブリッククラウド
+  - GKE
+  - AKS
+  - EKAS
+
 ## 3.1 Kubernetes 環境の種別
 
 ## 3.2 ローカルKubernetes
