@@ -206,6 +206,8 @@
 
 # 第3章 Kubernetes 環境の選択肢
 
+## 3.1 Kubernetes 環境の種別
+
 - ローカルKubernetes
   - Minikube
   - Docker Desktop
@@ -218,9 +220,12 @@
   - AKS
   - EKAS
 
-## 3.1 Kubernetes 環境の種別
-
 ## 3.2 ローカルKubernetes
+
+- Minikube
+  - シングルノード構成
+  - 複数台構成が必要なKubernetesの機能は使用できない
+  - 
 
 ## 3.3 Kubernetes 構築ツール
 
