@@ -37,6 +37,10 @@
     - [3.2.2 Docker Desktop for Mac](#322-docker-desktop-for-mac)
     - [3.2.3 kind (Kubernetes in Docker)](#323-kind-kubernetes-in-docker)
   - [3.3 Kubernetes 構築ツール](#33-kubernetes-構築ツール)
+    - [3.3.1 Kubernetesのサービスレベル目標(SLO)](#331-kubernetesのサービスレベル目標slo)
+    - [3.3.2 kubeadm](#332-kubeadm)
+    - [3.3.3 Flannel](#333-flannel)
+    - [3.3.4 Rancher](#334-rancher)
   - [3.4 パブリッククラウド上のマネージドKubernetes サービス](#34-パブリッククラウド上のマネージドkubernetes-サービス)
   - [3.5 Kubernetes プレイグラウンド/3.6 まとめ](#35-kubernetes-プレイグラウンド36-まとめ)
 - [第4章 API リソースとkubectl](#第4章-api-リソースとkubectl)
@@ -259,8 +263,28 @@
 ### 3.2.3 kind (Kubernetes in Docker)
 
 - ローカル環境でマルチノードクラスタを構築できる
+- kindで使用するDockerイメージはDockerHubのkindest Organizationで管理されている
 
 ## 3.3 Kubernetes 構築ツール
+
+### 3.3.1 Kubernetesのサービスレベル目標(SLO)
+
+### 3.3.2 kubeadm
+
+- Kubernetes公式の構築ツール
+
+### 3.3.3 Flannel
+
+- Kubernetesクラスタ内のPod同士の通信（Podネットワーク）を実現するもの
+
+### 3.3.4 Rancher
+
+- Kubernetesの構築・運用をサポートする機能を持つ
+  - 複数クラスタの統合管理
+  - Kubernetesクラスタのデプロイ（AWS, OpenStack, VMware, ...etc）
+  - 既存のKubernetesクラスタをRancherで管理（クラスタのインポート機能）
+  - 複数クラスタに対するアプリケーションデプロイ機能
+  - WebUIの提供（認証・モニタリングなど可能）
 
 ## 3.4 パブリッククラウド上のマネージドKubernetes サービス
 
