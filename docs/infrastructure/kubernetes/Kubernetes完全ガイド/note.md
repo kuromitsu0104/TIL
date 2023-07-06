@@ -42,6 +42,7 @@
     - [3.3.3 Flannel](#333-flannel)
     - [3.3.4 Rancher](#334-rancher)
   - [3.4 パブリッククラウド上のマネージドKubernetes サービス](#34-パブリッククラウド上のマネージドkubernetes-サービス)
+    - [3.4.1 GKE (Google Kubernetes Engine)](#341-gke-google-kubernetes-engine)
   - [3.5 Kubernetes プレイグラウンド/3.6 まとめ](#35-kubernetes-プレイグラウンド36-まとめ)
 - [第4章 API リソースとkubectl](#第4章-api-リソースとkubectl)
   - [4.1 本章以降を読み進めるための準備](#41-本章以降を読み進めるための準備)
@@ -287,6 +288,35 @@
   - WebUIの提供（認証・モニタリングなど可能）
 
 ## 3.4 パブリッククラウド上のマネージドKubernetes サービス
+
+### 3.4.1 GKE (Google Kubernetes Engine)
+
+- GCE (Google Compute Engine)
+  - 24時間で自動停止するインスタンス
+  - 安い
+- Preemptible-killer
+  - ランダムにノードを入れ替えることができる
+- Cloud Logging
+  - GKEのログを集約する
+- NodePool
+  - GKE特有の機能
+  - Nodeにラベリングしてグルーピングができる
+  ```mermaid
+  graph
+
+  subgraph Kubernetes Cluster
+    subgraph "NodePool A (High CPU)"
+      A["NodePoor: A"]
+      B["NodePoor: A"]
+      C["NodePoor: A"]
+    end
+
+    subgraph "NodePool B (High Memory)"
+      E["NodePoor: B"]
+      F["NodePoor: B"]
+    end
+  end
+  ```
 
 ## 3.5 Kubernetes プレイグラウンド/3.6 まとめ
 
