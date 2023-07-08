@@ -43,7 +43,10 @@
     - [3.3.4 Rancher](#334-rancher)
   - [3.4 パブリッククラウド上のマネージドKubernetes サービス](#34-パブリッククラウド上のマネージドkubernetes-サービス)
     - [3.4.1 GKE (Google Kubernetes Engine)](#341-gke-google-kubernetes-engine)
-  - [3.5 Kubernetes プレイグラウンド/3.6 まとめ](#35-kubernetes-プレイグラウンド36-まとめ)
+    - [3.4.2 AKS (Azure Kubernetes Service)](#342-aks-azure-kubernetes-service)
+    - [3.4.3 EKS (Elastic Kubernetes Service)](#343-eks-elastic-kubernetes-service)
+  - [3.5 Kubernetes プレイグラウンド](#35-kubernetes-プレイグラウンド)
+  - [3.6 まとめ](#36-まとめ)
 - [第4章 API リソースとkubectl](#第4章-api-リソースとkubectl)
   - [4.1 本章以降を読み進めるための準備](#41-本章以降を読み進めるための準備)
   - [4.2 Kubernetes の基礎](#42-kubernetes-の基礎)
@@ -75,7 +78,8 @@
   - [6.11 Ingress](#611-ingress)
   - [6.12 まとめ](#612-まとめ)
 - [第7章 Config ＆ Storage APIs カテゴリ](#第7章-config--storage-apis-カテゴリ)
-  - [7.1 Config ＆ Storage APIs カテゴリの概要/7.2 環境変数の利用](#71-config--storage-apis-カテゴリの概要72-環境変数の利用)
+  - [7.1 Config ＆ Storage APIs カテゴリの概要](#71-config--storage-apis-カテゴリの概要)
+  - [7.2 環境変数の利用](#72-環境変数の利用)
   - [7.3 Secret](#73-secret)
   - [7.4 ConfigMap](#74-configmap)
   - [7.5 PersistentVolumeClaim](#75-persistentvolumeclaim)
@@ -107,17 +111,20 @@
   - [10.6 リソースを削除した時の挙動](#106-リソースを削除した時の挙動)
   - [10.7 まとめ](#107-まとめ)
 - [第11章 メンテナンスとノードの停止](#第11章-メンテナンスとノードの停止)
-  - [11.1 ノードの停止とPod の停止/11.2 スケジューリング対象からの除外と復帰（cordon ／ uncordon）](#111-ノードの停止とpod-の停止112-スケジューリング対象からの除外と復帰cordon--uncordon)
+  - [11.1 ノードの停止とPod の停止](#111-ノードの停止とpod-の停止)
+  - [11.2 スケジューリング対象からの除外と復帰（cordon ／ uncordon）](#112-スケジューリング対象からの除外と復帰cordon--uncordon)
   - [11.3 ノードの排出処理によるPod の退避（drain）](#113-ノードの排出処理によるpod-の退避drain)
   - [11.4 PodDisruptionBudget（PDB）による安全な退避](#114-poddisruptionbudgetpdbによる安全な退避)
   - [11.5 まとめ](#115-まとめ)
 - [第12章 高度で柔軟なスケジューリング](#第12章-高度で柔軟なスケジューリング)
-  - [12.1 フィルタリングとスコアリング/12.2 マニフェストで指定するスケジューリング](#121-フィルタリングとスコアリング122-マニフェストで指定するスケジューリング)
+  - [12.1 フィルタリングとスコアリング](#121-フィルタリングとスコアリング)
+  - [12.2 マニフェストで指定するスケジューリング](#122-マニフェストで指定するスケジューリング)
   - [12.3 ビルトインノードラベルとラベルの追加](#123-ビルトインノードラベルとラベルの追加)
   - [12.4 nodeSelector（Simple Node Affinity）](#124-nodeselectorsimple-node-affinity)
   - [12.5 Node Affinity](#125-node-affinity)
   - [12.6 matchExpressions のオペレータとset-based 条件](#126-matchexpressions-のオペレータとset-based-条件)
-  - [12.7 Node Anti-Affinity/12.8 Inter-Pod Affinity](#127-node-anti-affinity128-inter-pod-affinity)
+  - [12.7 Node Anti-Affinity](#127-node-anti-affinity)
+  - [12.8 Inter-Pod Affinity](#128-inter-pod-affinity)
   - [12.9 Inter-Pod Anti-Affinity](#129-inter-pod-anti-affinity)
   - [12.10 複数の条件を組み合わせたPod のスケジューリング](#1210-複数の条件を組み合わせたpod-のスケジューリング)
   - [12.11 1.18 Beta TopologySpreadConstraints によるトポロジ均衡](#1211-118-beta-topologyspreadconstraints-によるトポロジ均衡)
@@ -317,8 +324,22 @@
     end
   end
   ```
+- GCPのコマンドラインツールで操作する
 
-## 3.5 Kubernetes プレイグラウンド/3.6 まとめ
+### 3.4.2 AKS (Azure Kubernetes Service)
+
+### 3.4.3 EKS (Elastic Kubernetes Service)
+
+- IAMとKubernetesユーザーを紐づけられる
+- EC2インスタンスをKubernetes Nodeとして利用する
+- EKS on Fargateというのもある
+  - FargateをKubernetes Nodeとして利用する
+  - 一部のKubernetesコンポーネントがまだマネージドでない可能性あり
+- eksctlで操作する
+
+## 3.5 Kubernetes プレイグラウンド
+
+## 3.6 まとめ
 
 # 第4章 API リソースとkubectl
 
@@ -382,7 +403,9 @@
 
 # 第7章 Config ＆ Storage APIs カテゴリ
 
-## 7.1 Config ＆ Storage APIs カテゴリの概要/7.2 環境変数の利用
+## 7.1 Config ＆ Storage APIs カテゴリの概要
+
+## 7.2 環境変数の利用
 
 ## 7.3 Secret
 
@@ -446,7 +469,9 @@
 
 # 第11章 メンテナンスとノードの停止
 
-## 11.1 ノードの停止とPod の停止/11.2 スケジューリング対象からの除外と復帰（cordon ／ uncordon）
+## 11.1 ノードの停止とPod の停止
+
+## 11.2 スケジューリング対象からの除外と復帰（cordon ／ uncordon）
 
 ## 11.3 ノードの排出処理によるPod の退避（drain）
 
@@ -456,7 +481,9 @@
 
 # 第12章 高度で柔軟なスケジューリング
 
-## 12.1 フィルタリングとスコアリング/12.2 マニフェストで指定するスケジューリング
+## 12.1 フィルタリングとスコアリング
+
+## 12.2 マニフェストで指定するスケジューリング
 
 ## 12.3 ビルトインノードラベルとラベルの追加
 
@@ -466,7 +493,9 @@
 
 ## 12.6 matchExpressions のオペレータとset-based 条件
 
-## 12.7 Node Anti-Affinity/12.8 Inter-Pod Affinity
+## 12.7 Node Anti-Affinity
+
+## 12.8 Inter-Pod Affinity
 
 ## 12.9 Inter-Pod Anti-Affinity
 
