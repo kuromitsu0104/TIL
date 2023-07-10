@@ -371,9 +371,87 @@
 
 ## 22 エンジニアリング日誌
 
+- 記録は記憶よりも確実
+- 記録する仕組みを構築する
+
 # 第4章　妄想の達人
 
+- 完璧なソフトウェアを作ることはできない
+  - 理由：そもそも、完璧なソフトウェアなど存在しないため
+- 防衛的なコーディングが求められる
+- 自分自身も含めて信頼するべきでない（完璧なコーディングができない前提で開発するべき）
+- 防衛手段
+  - 契約による設計（DbC）
+  - 死んだプログラムは嘘をつかない
+  - 表明を用いたプログラミング
+  - リソースのバランス方法
+  - ヘッドライトを追い越そうとしない
+
 ## 23 契約による設計（DbC）
+
+- 契約とは
+  - 当事者間にある権利と責務を定義するもの
+  - 履行しなかった場合の取り決めも記載する
+- 契約による設計（DbC）
+  - DbCの条件
+    - 以下のいずれかの条件を満たさないときに、例外のスローやプログラムの終了などの結果を引き起こす
+    - 前提条件
+      - 呼び出す前に満たしておくべき条件
+      - 条件に違反する場合は呼び出してはいけない
+      - 適切なデータを引き渡すのは呼び出し側の責任
+    - 事後条件
+      - 呼び出し後に保証する内容
+      - 永久ループは許可しない
+    - クラス不変表明
+
+      - クラスやオブジェクトのインスタンスが常に特定の条件を満たすことを表明すること
+      - 例：矩形の幅（width）と高さ（height）を保持し、不変条件として幅と高さが正の値であることを要求する
+
+        ```ruby
+        class Rectangle
+          attr_reader :width, :height
+
+          def initialize(width, height)
+            @width = width
+            @height = height
+            validate_invariants
+          end
+
+          def set_dimensions(width, height)
+            @width = width
+            @height = height
+            validate_invariants
+          end
+
+          private
+
+          def validate_invariants
+            raise 'Width must be positive' if @width <= 0
+            raise 'Height must be positive' if @height <= 0
+          end
+        end
+
+        # 以下はサンプルの実行例です
+
+        # 正常な矩形のインスタンスを作成
+        rectangle = Rectangle.new(5, 10)
+        puts "Width: #{rectangle.width}, Height: #{rectangle.height}" #=> Width: 5, Height: 10
+
+        # 不正な値を設定しようとすると例外が発生する
+        begin
+          rectangle.set_dimensions(-1, 10)
+        rescue => e
+          puts e.message #=> Width must be positive
+        end
+
+        # 不正な値を設定しようとすると例外が発生する
+        begin
+          rectangle.set_dimensions(5, 0)
+        rescue => e
+          puts e.message #=> Height must be positive
+        end
+        ```
+    - 条件を厳格にすることで考慮すべき条件が絞られ、少ないコードで対処できるようになる
 
 ## 24 死んだプログラムは嘘をつかない
 
