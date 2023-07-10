@@ -345,6 +345,21 @@
 
 ## 4.1 本章以降を読み進めるための準備
 
+- kindでcluster構築
+  ```shell
+  # クラスタ作成
+  ## kindという名前のクラスタを作成
+  kind create cluster
+  ## k8sという名前のクラスタを作成
+  kind create cluster --name=k8s
+
+  # クラスタ削除
+  ## kindという名前のクラスタを削除
+  kind delete cluster
+  ## k8sという名前のクラスタを削除
+  kind delete cluster --name=k8s
+  ```
+
 ## 4.2 Kubernetes の基礎
 
 ## 4.3 Kubernetes とリソース
