@@ -453,6 +453,30 @@
 
 ## 4.4 Namespace による仮想的なクラスタの分離
 
+- Namespace
+  - 仮想的なKubernetesクラスタの分離機能のこと
+- Namespaceでできること
+  - 本番環境、ステージング環境、開発環境のように、環境ごとに分割すること
+  - 同じKubernetesクラスタを複数チームでの利用すること
+- Namespaceの慣習
+  - kube-system
+    - Kubernetes Dashboardなどのシステムコンポーネントやアドオンをデプロイする
+  - kube-public
+    - 全ユーザーが共通して利用する設定値などを保存する
+  - kube-node-lease
+    - Kubernetes Nodeのハードビート情報を保存するためのLeaseリソースを保存する
+  - default
+    - ユーザーが任意のリソースを登録する
+- Namespace、RBAC (RoleBased Access Control)、Network Policyを組み合わせることで分離性を高められる
+- Namespaceの分割粒度
+  - マイクロサービス単位（開発チーム単位）での分割が好ましい。（権限分離性の観点で）
+- クラスタの分離粒度
+  - 本番環境、ステージング環境、開発環境の環境単位でクラスタごと分離するのが好ましい
+  - 理由
+    - すべての環境で同時に障害が発生するリスクがあるため
+    - マニフェストの再利用性が著しく低下するため
+    - 環境名を考慮した命名が必要で煩雑になるため
+
 ## 4.5 CLI ツールkubectl
 
 ## 4.6 まとめ
