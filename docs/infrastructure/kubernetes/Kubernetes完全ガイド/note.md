@@ -58,6 +58,9 @@
     - [Metadata APIs カテゴリ](#metadata-apis-カテゴリ)
   - [4.4 Namespace による仮想的なクラスタの分離](#44-namespace-による仮想的なクラスタの分離)
   - [4.5 CLI ツールkubectl](#45-cli-ツールkubectl)
+    - [4.5.1 認証情報とContext (config)](#451-認証情報とcontext-config)
+    - [4.5.2 Kubectx / kubensによる切り替え](#452-kubectx--kubensによる切り替え)
+    - [4.5.3 マニフェストとリソースの作成 / 削除 / 更新 (create / delete / apply)](#453-マニフェストとリソースの作成--削除--更新-create--delete--apply)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -478,6 +481,51 @@
     - 環境名を考慮した命名が必要で煩雑になるため
 
 ## 4.5 CLI ツールkubectl
+
+- クラスタの操作方法
+  - Kubernetes MasterのAPI
+  - クライアントライブラリ
+  - CLIツール「kubectl」 => 最も一般的
+
+### 4.5.1 認証情報とContext (config)
+
+- kubeconfig
+
+  - Kubernetes Masterとの通信に必要な認証情報などを記述する
+
+    ```yaml
+    # ~/.kube/config
+
+    apiVersion: v1
+    kind: Config
+    preferences: {}
+    clusters: # 接続先クラスタ
+      - name: sample-cluster
+        cluster:
+          server: https://localhost:6443
+    users: # 認証情報
+      - name: sample-user
+        user:
+          client-certificate-data: LS0tLS1CRUdJTi...
+          client-key-data: LS0tLS1CRUdJTi...
+    contexts: # 接続先と認証情報の組み合わせ
+      - name: sample-context
+        context:
+          cluster: sample-cluster
+          namespace: default
+          user: sample-user
+    current-context: sample-context
+    ```
+
+- kubeconfigの設定変更の方法
+  - kubeconfigを直接編集する
+  - kubectlコマンドで設定変更（kubeconfigファイルも自動的に更新される）
+
+### 4.5.2 Kubectx / kubensによる切り替え
+
+- ContextやNamespaceを簡単に切り替えられるOSS
+
+### 4.5.3 マニフェストとリソースの作成 / 削除 / 更新 (create / delete / apply)
 
 ## 4.6 まとめ
 
