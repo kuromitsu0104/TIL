@@ -51,6 +51,11 @@
   - [4.1 本章以降を読み進めるための準備](#41-本章以降を読み進めるための準備)
   - [4.2 Kubernetes の基礎](#42-kubernetes-の基礎)
   - [4.3 Kubernetes とリソース](#43-kubernetes-とリソース)
+    - [Workloads APIs カテゴリ](#workloads-apis-カテゴリ)
+    - [Service APIs カテゴリ](#service-apis-カテゴリ)
+    - [Config & Storage APIs カテゴリ](#config--storage-apis-カテゴリ)
+    - [Cluster APIs カテゴリ](#cluster-apis-カテゴリ)
+    - [Metadata APIs カテゴリ](#metadata-apis-カテゴリ)
   - [4.4 Namespace による仮想的なクラスタの分離](#44-namespace-による仮想的なクラスタの分離)
   - [4.5 CLI ツールkubectl](#45-cli-ツールkubectl)
   - [4.6 まとめ](#46-まとめ)
@@ -306,8 +311,10 @@
 - Cloud Logging
   - GKEのログを集約する
 - NodePool
+
   - GKE特有の機能
   - Nodeにラベリングしてグルーピングができる
+
   ```mermaid
   graph
 
@@ -324,6 +331,7 @@
     end
   end
   ```
+
 - GCPのコマンドラインツールで操作する
 
 ### 3.4.2 AKS (Azure Kubernetes Service)
@@ -346,6 +354,7 @@
 ## 4.1 本章以降を読み進めるための準備
 
 - kindでcluster構築
+
   ```shell
   # クラスタ作成
   ## kindという名前のクラスタを作成
@@ -362,7 +371,85 @@
 
 ## 4.2 Kubernetes の基礎
 
+- Kubernetesの各ノード
+  - Kubernetes Master
+    - APIエンドポイントの提供
+    - コンテナのスケジューリング、スケーリング
+  - Kubernetes Node
+    - コンテナを起動
+- Kubernetes Masterへのリソースの登録
+  - kubectlとマニフェストファイルで行う
+  - kubectlがマニフェストファイルの内容に基づいて、Kubernetes MasterのAPIにリクエストを送信してKubernetesを操作する
+
 ## 4.3 Kubernetes とリソース
+
+- Kubernetesのリソース
+  | 種別 | 概要 |
+  | --- | --- |
+  | Workload APIs カテゴリ | コンテナの実行に関するリソース |
+  | Service APIs カテゴリ | コンテナを外部公開するようなエンドポイントを提供するリソース |
+  | Config & Storage APIs カテゴリ | 設定 / 機密情報 / 永続化ボリュームに関するリソース |
+  | Cluster APIs カテゴリ | セキュリティやクォータなどに関するリソース |
+  | Metadata APIs カテゴリ | クラスタ内の他リソースを操作するためのリソース |
+
+### Workloads APIs カテゴリ
+
+- クラスタ上にコンテナを起動させるためのリソース
+- リソースの種類
+  - Pod
+  - ReplicationController
+  - ReplicaSet
+  - Deployment
+  - DaemonSet
+  - StatefulSet
+  - Job
+  - CronJob
+
+### Service APIs カテゴリ
+
+- コンテナのサービスディスカバリや、クラスタの外部からアクセス可能なエンドポイントを提供するリソース
+- リソースの種類
+  - Service
+    - ClusterIP
+    - ExternalIP (ClusterIPの一種)
+    - NodePort
+    - LoadBalancer
+    - Headless (None)
+    - ExternalName
+    - None-Selector
+  - Ingress
+
+### Config & Storage APIs カテゴリ
+
+- 設定や機密データをコンテナに埋め込んだり、永続ボリュームを提供するリソース
+- リソースの種類
+  - Secret
+  - ConfigMap
+  - PersistentVolumeClaim
+
+### Cluster APIs カテゴリ
+
+- クラスタ自体の振る舞いを定義するリソース
+- リソースの種類
+  - Node
+  - Namespace
+  - PersistentVolume
+  - ResourceQuota
+  - ServiceAccount
+  - Role
+  - ClusterRole
+  - RoleBinding
+  - ClusterRoleBinding
+  - NetworkPolicy
+
+### Metadata APIs カテゴリ
+
+- クラスタ内の他のリソースの動作を制御するためのリソース
+- リソースの種類
+  - LimitRange
+  - HorizontalPodAutoscaler
+  - PodDisruptionBudget
+  - CustomResourceDefinition
 
 ## 4.4 Namespace による仮想的なクラスタの分離
 
