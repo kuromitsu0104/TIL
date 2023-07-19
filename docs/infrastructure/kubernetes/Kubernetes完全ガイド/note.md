@@ -527,6 +527,21 @@
 
 ### 4.5.3 マニフェストとリソースの作成 / 削除 / 更新 (create / delete / apply)
 
+- リソース操作
+  - 作成
+    - `kubectl create -f hoge.yaml`
+  - 削除
+    - `kubectl delete -f hoge.yaml`
+    - オプション
+      - `--wait`：削除完了するまで待機する
+      - `--force`：強制削除
+  - 更新
+    - `kubectl apply -f hoge.yaml`
+    - applyできないフィールドも存在する
+- Podのイメージの詳細確認
+  - `kubectl get pod Pod名 -p jsonpath={}`
+  - `kubectl get pod Pod名 -p jsonpath={.spec.containers}`
+
 ## 4.6 まとめ
 
 # 第5章 Workloads APIs カテゴリ
