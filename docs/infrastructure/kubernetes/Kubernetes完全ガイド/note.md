@@ -63,6 +63,8 @@
     - [4.5.3 マニフェストとリソースの作成 / 削除 / 更新 (create / delete / apply)](#453-マニフェストとリソースの作成--削除--更新-create--delete--apply)
     - [4.5.4 リソース作成にも kubectl apply を使うべき理由](#454-リソース作成にも-kubectl-apply-を使うべき理由)
     - [4.5.5 Server-side apply](#455-server-side-apply)
+    - [4.5.6 Pod の再起動 (rollout restart)](#456-pod-の再起動-rollout-restart)
+    - [4.5.7 generateNameによるランダムな名前のリソースの作成](#457-generatenameによるランダムな名前のリソースの作成)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -558,6 +560,15 @@
   - コマンド: `kubectl apply -f hoge.yaml --server-side`
   - サーバ側の実態とマニフェストを比較し、コンフリクトがある場合は処理を中断する
   - `--force-conflicts`で、コンフリクトを無視してマニフェストファイルの内容で更新する
+
+### 4.5.6 Pod の再起動 (rollout restart)
+
+- リソースに紐づくPodを再起動する
+  - `kubectl rollout restart リソースの種類 リソース名`
+- 注意点: Podに対して直接実行することはできない
+  - `kubectl rollout restart pod Pod名`はエラーで動作しない
+
+### 4.5.7 generateNameによるランダムな名前のリソースの作成
 
 ## 4.6 まとめ
 
