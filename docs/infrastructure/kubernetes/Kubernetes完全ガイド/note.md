@@ -61,6 +61,8 @@
     - [4.5.1 認証情報とContext (config)](#451-認証情報とcontext-config)
     - [4.5.2 Kubectx / kubensによる切り替え](#452-kubectx--kubensによる切り替え)
     - [4.5.3 マニフェストとリソースの作成 / 削除 / 更新 (create / delete / apply)](#453-マニフェストとリソースの作成--削除--更新-create--delete--apply)
+    - [4.5.4 リソース作成にも kubectl apply を使うべき理由](#454-リソース作成にも-kubectl-apply-を使うべき理由)
+    - [4.5.5 Server-side apply](#455-server-side-apply)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -539,8 +541,23 @@
     - `kubectl apply -f hoge.yaml`
     - applyできないフィールドも存在する
 - Podのイメージの詳細確認
-  - `kubectl get pod Pod名 -p jsonpath={}`
-  - `kubectl get pod Pod名 -p jsonpath={.spec.containers}`
+  - `kubectl get pod Pod名 -o jsonpath={}`
+  - `kubectl get pod Pod名 -o jsonpath={.spec.containers}`
+
+### 4.5.4 リソース作成にも kubectl apply を使うべき理由
+
+- 常に`kubectl apply`を使用するべき
+- 理由：差分検知が想定通りに動作しないケースがあるため
+
+### 4.5.5 Server-side apply
+
+- Client-side apply
+  - コマンド: `kubectl apply -f hoge.yaml`
+  - 手元のマニフェストファイルで更新してしまうため、サーバ側の情報を直接書き換えたりしていると内容を破棄してしまうケースがある
+- Server-side apply
+  - コマンド: `kubectl apply -f hoge.yaml --server-side`
+  - サーバ側の実態とマニフェストを比較し、コンフリクトがある場合は処理を中断する
+  - `--force-conflicts`で、コンフリクトを無視してマニフェストファイルの内容で更新する
 
 ## 4.6 まとめ
 
