@@ -67,6 +67,9 @@
     - [4.5.7 generateNameによるランダムな名前のリソースの作成](#457-generatenameによるランダムな名前のリソースの作成)
     - [4.5.8 リソースの状態のチェックと待機(wait)](#458-リソースの状態のチェックと待機wait)
     - [4.5.9 マニフェストファイルの設計](#459-マニフェストファイルの設計)
+      - [1つのマニフェストファイルの中に複数のリソースを記述する](#1つのマニフェストファイルの中に複数のリソースを記述する)
+      - [複数のマニフェストファイルを同時に適用する](#複数のマニフェストファイルを同時に適用する)
+      - [マニフェストファイルの設計指針](#マニフェストファイルの設計指針)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -600,6 +603,66 @@
     - `kubectl wait --for=condition=Ready -f マニフェストファイルのPath`
 
 ### 4.5.9 マニフェストファイルの設計
+
+#### 1つのマニフェストファイルの中に複数のリソースを記述する
+
+- マニフェストファイルのユースケース
+  - 1つのマニフェストファイルにまとめるケース
+    - 「Podを起動するWorkloads APIsカテゴリのリソース」と「外部公開するService APIsカテゴリのリソース」をまとめることで、1つのマニフェストファイルでサービスを公開できるようにしたいケース
+  - マニフェストファイルを分割するケース
+    - 設定ファイル（ConfigMapリソース）やパスワード（Secretリソース）を共通化したいケース
+- 複数リソースの記述方法
+  - `---`で区切る
+
+#### 複数のマニフェストファイルを同時に適用する
+
+- ディレクトリ構成が以下の場合
+  ```
+  ./
+  ├── sample-pod1.yaml
+  ├── sample-pod2.yaml
+  └── innerdir
+      └── sample-pod3.yaml
+  ```
+- ディレクトリ内のマニフェストファイルを適用
+  - `kubectl apply -f ./`
+- ディレクトリ内のマニフェストファイルを再帰的に適用（サブディレクトリ内のマニフェストも適用）
+  - `kubectl apply -f ./ -R`
+
+#### マニフェストファイルの設計指針
+
+- マイクロサービス単位でマニフェストファイルを分割するパターン
+  ```
+  ./whole-system
+  ├── microservice-A.yaml (Deployment + Service)
+  ├── microservice-B.yaml (Deployment + Service)
+  ├── microservice-C.yaml (Deployment + Service)
+  └── microservice-D.yaml (Deployment + Service)
+  ```
+  - メリット
+    - マイクロサービス単位で適用できること
+- マイクロサービス単位でディレクトリを分割するパターン
+  ```
+  ./microservice-A/
+  ├── deployment.yaml
+  └── service.yaml
+
+  ./microservice-B/
+  ├── deployment.yaml
+  └── service.yaml
+
+  ./microservice-C/
+  ├── deployment.yaml
+  └── service.yaml
+
+  ./microservice-D/
+  ├── deployment.yaml
+  └── service.yaml
+  ```
+  - メリット
+    - 可読性が高まること
+  - デメリット
+    - 適用の順序制御が難しい
 
 ## 4.6 まとめ
 
