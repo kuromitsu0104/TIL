@@ -51,11 +51,11 @@
   - [4.1 本章以降を読み進めるための準備](#41-本章以降を読み進めるための準備)
   - [4.2 Kubernetes の基礎](#42-kubernetes-の基礎)
   - [4.3 Kubernetes とリソース](#43-kubernetes-とリソース)
-    - [Workloads APIs カテゴリ](#workloads-apis-カテゴリ)
-    - [Service APIs カテゴリ](#service-apis-カテゴリ)
-    - [Config & Storage APIs カテゴリ](#config--storage-apis-カテゴリ)
-    - [Cluster APIs カテゴリ](#cluster-apis-カテゴリ)
-    - [Metadata APIs カテゴリ](#metadata-apis-カテゴリ)
+    - [4.3.1 Workloads APIs カテゴリ](#431-workloads-apis-カテゴリ)
+    - [4.3.2 Service APIs カテゴリ](#432-service-apis-カテゴリ)
+    - [4.3.3 Config & Storage APIs カテゴリ](#433-config--storage-apis-カテゴリ)
+    - [4.3.4 Cluster APIs カテゴリ](#434-cluster-apis-カテゴリ)
+    - [4.3.5 Metadata APIs カテゴリ](#435-metadata-apis-カテゴリ)
   - [4.4 Namespace による仮想的なクラスタの分離](#44-namespace-による仮想的なクラスタの分離)
   - [4.5 CLI ツールkubectl](#45-cli-ツールkubectl)
     - [4.5.1 認証情報とContext (config)](#451-認証情報とcontext-config)
@@ -65,6 +65,8 @@
     - [4.5.5 Server-side apply](#455-server-side-apply)
     - [4.5.6 Pod の再起動 (rollout restart)](#456-pod-の再起動-rollout-restart)
     - [4.5.7 generateNameによるランダムな名前のリソースの作成](#457-generatenameによるランダムな名前のリソースの作成)
+    - [4.5.8 リソースの状態のチェックと待機(wait)](#458-リソースの状態のチェックと待機wait)
+    - [4.5.9 マニフェストファイルの設計](#459-マニフェストファイルの設計)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -399,7 +401,7 @@
   | Cluster APIs カテゴリ | セキュリティやクォータなどに関するリソース |
   | Metadata APIs カテゴリ | クラスタ内の他リソースを操作するためのリソース |
 
-### Workloads APIs カテゴリ
+### 4.3.1 Workloads APIs カテゴリ
 
 - クラスタ上にコンテナを起動させるためのリソース
 - リソースの種類
@@ -412,7 +414,7 @@
   - Job
   - CronJob
 
-### Service APIs カテゴリ
+### 4.3.2 Service APIs カテゴリ
 
 - コンテナのサービスディスカバリや、クラスタの外部からアクセス可能なエンドポイントを提供するリソース
 - リソースの種類
@@ -426,7 +428,7 @@
     - None-Selector
   - Ingress
 
-### Config & Storage APIs カテゴリ
+### 4.3.3 Config & Storage APIs カテゴリ
 
 - 設定や機密データをコンテナに埋め込んだり、永続ボリュームを提供するリソース
 - リソースの種類
@@ -434,7 +436,7 @@
   - ConfigMap
   - PersistentVolumeClaim
 
-### Cluster APIs カテゴリ
+### 4.3.4 Cluster APIs カテゴリ
 
 - クラスタ自体の振る舞いを定義するリソース
 - リソースの種類
@@ -449,7 +451,7 @@
   - ClusterRoleBinding
   - NetworkPolicy
 
-### Metadata APIs カテゴリ
+### 4.3.5 Metadata APIs カテゴリ
 
 - クラスタ内の他のリソースの動作を制御するためのリソース
 - リソースの種類
@@ -569,6 +571,35 @@
   - `kubectl rollout restart pod Pod名`はエラーで動作しない
 
 ### 4.5.7 generateNameによるランダムな名前のリソースの作成
+
+- マニフェストファイルでランダムな名前のリソースを定義可能
+  ```yaml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    generateName: hoge- # hoge-cglj9 のようなランダムなリソース名にできる
+  spec:
+    containers:
+    - name: nginx-container
+      image: nginx:1.16
+  ```
+- 注意点
+  - createでのみ利用可能
+  - applyでは不可能
+
+### 4.5.8 リソースの状態のチェックと待機(wait)
+
+- 構文
+  - `kubectl wait --for=条件 リソースを指定`
+- 例
+  - Podの起動を待機する場合
+    - `kubectl wait --for=condition=Ready pod/Pod名`
+  - Podの削除を待機する場合
+    - `kubectl wait --for=delete pod --all --timeout=5s`
+  - マニフェストファイルでPodの起動を待機する場合
+    - `kubectl wait --for=condition=Ready -f マニフェストファイルのPath`
+
+### 4.5.9 マニフェストファイルの設計
 
 ## 4.6 まとめ
 
