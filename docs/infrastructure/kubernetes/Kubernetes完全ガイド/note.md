@@ -86,6 +86,9 @@
     - [4.5.16 リソースの情報取得 (get)](#4516-リソースの情報取得-get)
     - [4.5.17 リソースの詳細情報の取得 (describe)](#4517-リソースの詳細情報の取得-describe)
     - [4.5.18 実際のリソースの使用量の確認 (top)](#4518-実際のリソースの使用量の確認-top)
+    - [4.5.19 コンテナ上でのコマンドの実行 (exec)](#4519-コンテナ上でのコマンドの実行-exec)
+    - [4.5.20 Pod上にデバッグ用の一時的なコンテナの追加 (debug)](#4520-pod上にデバッグ用の一時的なコンテナの追加-debug)
+    - [4.5.21 ローカルマシンからPodへのポートフォワーディング (port-forward)](#4521-ローカルマシンからpodへのポートフォワーディング-port-forward)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -818,6 +821,26 @@
 - リソースの使用量を確認
   - `kubectl top node`
   - `kubectl top pod`
+
+### 4.5.19 コンテナ上でのコマンドの実行 (exec)
+
+- Pod内のコンテナでbash
+  - `kubectl exec -it hoge-pod -- /bin/bash`
+- Pod内の特定のコンテナでbash
+  - `kubectl exec -it hoge-pod -c hoge-container -- /bin/bash`
+
+### 4.5.20 Pod上にデバッグ用の一時的なコンテナの追加 (debug)
+
+- 課題
+  - 最小限のコンテナイメージで`kubectl exec`しても、ツールが揃っておらずデバッグが困難である
+- 解決策
+  - 一時的なコンテナを起動して、そのコンテナのツールを利用してデバッグできるようにする
+  - `kubectl debug sample-pod --image=amsy810/tools:v2.0 -it -- bash`
+
+### 4.5.21 ローカルマシンからPodへのポートフォワーディング (port-forward)
+
+- ホストの8888ポートへのリクエストをPodの80番ポートに転送する
+  - `kubectl port-forward hoge-pod 8888:80`
 
 ## 4.6 まとめ
 
