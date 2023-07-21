@@ -82,6 +82,10 @@
     - [4.5.12 エディターによる編集j (edit)](#4512-エディターによる編集j-edit)
     - [4.5.13 リソースの一部情報の更新 (set)](#4513-リソースの一部情報の更新-set)
     - [4.5.14 ローカルマニフェストとKubernetes上の登録情報の差分取得 (diff)](#4514-ローカルマニフェストとkubernetes上の登録情報の差分取得-diff)
+    - [4.5.15 利用可能なリソース種別の一覧取得 (api-resources)](#4515-利用可能なリソース種別の一覧取得-api-resources)
+    - [4.5.16 リソースの情報取得 (get)](#4516-リソースの情報取得-get)
+    - [4.5.17 リソースの詳細情報の取得 (describe)](#4517-リソースの詳細情報の取得-describe)
+    - [4.5.18 実際のリソースの使用量の確認 (top)](#4518-実際のリソースの使用量の確認-top)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -775,6 +779,45 @@
 
 - マニフェストファイルとリソースの差分を表示できる
   - `kubectl diff -f hoge.yaml`
+
+### 4.5.15 利用可能なリソース種別の一覧取得 (api-resources)
+
+### 4.5.16 リソースの情報取得 (get)
+
+- Pod一覧
+  - `kubectl get pods`
+- 特定のPod
+  - `kubectl get pod hoge-pod`
+- 特定のラベルを持つPod
+  - `kubectl get pod -l label1=val1`
+- 詳細情報を表示
+  - `kubectl get pods -o wide`
+  - `kubectl get pods -o yaml`
+  - `kubectl get pods -o json`
+  - `kubectl get pods -o json hoge-pod`
+- Node一覧
+  - `kubectl get nodes`
+- ほぼすべての種類のリソースを表示
+  - `kubectl get all`
+- すべての種類のリソースを表示
+  - `kubectl get $(kubectl api-resources --namespeced=true --verbs=list -o name | tr '\n' ',' | sed -e 's|,$||g')`
+- リソースの状態変化を表示
+  - `kubectl get pods --watch`
+  - `kubectl get pods --watch --output-watch-events`
+
+### 4.5.17 リソースの詳細情報の取得 (describe)
+
+- リソースの詳細情報を表示
+  - `kubectl describe pod hoge-pod`
+- 確認できる情報
+  - Event配下で、リソースの状態遷移などのライフサイクル情報が確認できる
+  - など
+
+### 4.5.18 実際のリソースの使用量の確認 (top)
+
+- リソースの使用量を確認
+  - `kubectl top node`
+  - `kubectl top pod`
 
 ## 4.6 まとめ
 
