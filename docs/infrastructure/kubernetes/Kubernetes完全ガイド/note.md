@@ -89,6 +89,8 @@
     - [4.5.19 コンテナ上でのコマンドの実行 (exec)](#4519-コンテナ上でのコマンドの実行-exec)
     - [4.5.20 Pod上にデバッグ用の一時的なコンテナの追加 (debug)](#4520-pod上にデバッグ用の一時的なコンテナの追加-debug)
     - [4.5.21 ローカルマシンからPodへのポートフォワーディング (port-forward)](#4521-ローカルマシンからpodへのポートフォワーディング-port-forward)
+    - [4.5.22 コンテナのログ確認](#4522-コンテナのログ確認)
+    - [4.5.23 Sternによる高度なログ確認](#4523-sternによる高度なログ確認)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -841,6 +843,18 @@
 
 - ホストの8888ポートへのリクエストをPodの80番ポートに転送する
   - `kubectl port-forward hoge-pod 8888:80`
+
+### 4.5.22 コンテナのログ確認
+
+- Kubernetesでのロギングのベストプラクティス
+  - 標準出力、標準エラー出力にログを出力すること
+- Kubernetesでのログの確認方法
+  - `kubectl logs hoge-pod`
+  - `kubectl logs hoge-pod -c hoge-container`
+- ログを監視し続けたい場合
+  - `kubectl logs -f hoge-pod`
+
+### 4.5.23 Sternによる高度なログ確認
 
 ## 4.6 まとめ
 
