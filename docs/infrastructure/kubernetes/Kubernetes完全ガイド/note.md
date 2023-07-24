@@ -93,6 +93,11 @@
     - [4.5.23 Sternによる高度なログ確認](#4523-sternによる高度なログ確認)
     - [4.5.24 コンテナとローカルマシン間でのファイルのコピー (cp)](#4524-コンテナとローカルマシン間でのファイルのコピー-cp)
     - [4.5.25 kubectl pluginとパッケージマネージャ (plugin / krew)](#4525-kubectl-pluginとパッケージマネージャ-plugin--krew)
+    - [4.5.26 kubectlにおけるデバッグ](#4526-kubectlにおけるデバッグ)
+    - [4.5.27 kubectlのその他のTIPS](#4527-kubectlのその他のtips)
+      - [aliasの作成](#aliasの作成)
+      - [kube-ps1](#kube-ps1)
+      - [Podが起動しない場合のデバッグ](#podが起動しない場合のデバッグ)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -918,6 +923,37 @@
   ```shell
   kubectl krew install plugin名
   ```
+
+### 4.5.26 kubectlにおけるデバッグ
+
+- `kubectl`と`Kubernetes MasterのAPI`の疎通ログを表示してデバッグできるようにする
+  - `kubectl -v=6 get pod`
+
+### 4.5.27 kubectlのその他のTIPS
+
+#### aliasの作成
+
+- 各種コマンドのエイリアスを作成して効率化する
+
+#### kube-ps1
+
+- プロンプトにクラスタとNamespaceなどを表示できるライブラリ
+
+#### Podが起動しない場合のデバッグ
+
+- コンテナが出力するログを確認する
+  - `kubectl logs`
+  - アプリケーション側に問題がある場合のデバッグに有効
+- KubernetesのEventの項目を確認する
+  - `kubectl describe`
+  - Kubernetesの設定やリソース設定に問題がある場合のデバッグに有効
+  - よくある原因
+    - リソース枯渇によりスケジューリングに失敗している
+    - スケジューリングポリシーに該当するリソースが存在しない
+    - ボリュームマウントに失敗した
+- コンテナのシェル上で確認する
+  - `kubectl run`
+  - コンテナ内の環境やアプリケーションに問題がある場合のデバッグに有効
 
 ## 4.6 まとめ
 
