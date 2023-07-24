@@ -92,6 +92,7 @@
     - [4.5.22 コンテナのログ確認](#4522-コンテナのログ確認)
     - [4.5.23 Sternによる高度なログ確認](#4523-sternによる高度なログ確認)
     - [4.5.24 コンテナとローカルマシン間でのファイルのコピー (cp)](#4524-コンテナとローカルマシン間でのファイルのコピー-cp)
+    - [4.5.25 kubectl pluginとパッケージマネージャ (plugin / krew)](#4525-kubectl-pluginとパッケージマネージャ-plugin--krew)
   - [4.6 まとめ](#46-まとめ)
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
@@ -871,6 +872,52 @@
   - `kubectl cp hoge-pod:/etc/hostname ./hostname`
 - ローカルマシンのhostnameファイルをhoge-pod内の/etc/hostnameにコピー
   - `kubectl cp ./hostname hoge-pod:/etc/hostname`
+
+### 4.5.25 kubectl pluginとパッケージマネージャ (plugin / krew)
+
+- krewをセットアップ
+
+  - 手順(https://krew.sigs.k8s.io/docs/user-guide/setup/install/)
+  - gitインストール
+
+    ```shell
+    sudo apt install -y git
+    ```
+
+  - パッケージ取得
+
+    ```shell
+    (
+      set -x; cd "$(mktemp -d)" &&
+      OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+      ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+      KREW="krew-${OS}_${ARCH}" &&
+      curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+      tar zxvf "${KREW}.tar.gz" &&
+      ./"${KREW}" install krew
+    )
+    ```
+
+  - bashにPATHを追加
+
+    ```shell
+    # ~/.bashrc
+    export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+    ```
+
+- plugin一覧
+
+  ```shell
+  kubectl pluglin list
+  #=> The following compatible plugins are available:
+  #=> /home/user/.krew/bin/kubectl-krew
+  ```
+
+- plugin追加
+
+  ```shell
+  kubectl krew install plugin名
+  ```
 
 ## 4.6 まとめ
 
