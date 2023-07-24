@@ -106,6 +106,16 @@
       - [サイドカーパターン](#サイドカーパターン)
       - [アンバサダーパターン](#アンバサダーパターン)
       - [アダプタパターン](#アダプタパターン)
+    - [5.2.2 Podの作成](#522-podの作成)
+    - [5.2.4 コンテナへのログインとコマンドの実行](#524-コンテナへのログインとコマンドの実行)
+    - [5.2.5 ENTRYPOINT命令 / CMD命令とcommand / args](#525-entrypoint命令--cmd命令とcommand--args)
+    - [5.2.6 Pod名の制限](#526-pod名の制限)
+    - [5.2.7 ホストのネットワーク構成を利用したPodの起動](#527-ホストのネットワーク構成を利用したpodの起動)
+    - [5.2.8 PodのDNS設定 (dnsPolicy) とサービスディスカバリ](#528-podのdns設定-dnspolicy-とサービスディスカバリ)
+      - [ClusterFirst (デフォルト)](#clusterfirst-デフォルト)
+      - [None](#none)
+      - [Default](#default)
+      - [ClusterFirstWithHostNet](#clusterfirstwithhostnet)
   - [5.3 ReplicaSet ／ ReplicationController](#53-replicaset--replicationcontroller)
   - [5.4 Deployment](#54-deployment)
   - [5.5 DaemonSet](#55-daemonset)
@@ -1070,6 +1080,81 @@
   - アンバサダーコンテナによる中継を挟むことで、開発・本番での環境差を考慮する必要がなくなる（開発環境では単一DBで、本番環境では分割DBのようなケース）
 
 #### アダプタパターン
+
+- 外部からのリクエストに対して差分を吸収するコンテナ（アダプタコンテナ）を内包したパターン
+
+  ```mermaid
+  flowchart LR
+    subgraph Pod
+      direction LR
+      A["MySQL<br>(MySQL独自の形式でメトリクスを提供)"]
+      B["MySQL Exporter<br>(Prometheusの形式に合わせてメトリクスを整形)"]
+      A<-->B
+    end
+
+    B<-.->Prometheus
+  ```
+
+  ```mermaid
+  flowchart LR
+    subgraph Pod
+      direction LR
+      A["Redis<br>(Redis独自の形式でメトリクスを提供)"]
+      B["Redis Exporter<br>(Prometheusの形式に合わせてメトリクスを整形)"]
+      A<-->B
+    end
+
+    B<-.->Prometheus
+  ```
+
+### 5.2.2 Podの作成
+
+### 5.2.4 コンテナへのログインとコマンドの実行
+
+### 5.2.5 ENTRYPOINT命令 / CMD命令とcommand / args
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample-entrypoint
+spec:
+  containers:
+  - name: nginx-container-112
+    image: nginx:1.16
+    command: ["/bin/sleep"] # ENTRYPOINT命令に対応
+    args: ["3600"] # CMD命令に対応
+```
+
+### 5.2.6 Pod名の制限
+
+### 5.2.7 ホストのネットワーク構成を利用したPodの起動
+
+- `hostNetwork: true`により、ホスト上でプロセスを起動するのと同等のネットワーク構成でPodを起動可能
+- 基本的には使用しない（Portの衝突を回避できないため）
+
+### 5.2.8 PodのDNS設定 (dnsPolicy) とサービスディスカバリ
+
+#### ClusterFirst (デフォルト)
+
+- デフォルト設定
+- Podはクラスタ内DNSを用いて名前解決を行う
+- 名前解決できないドメインは、アップストリームのDNS設定サーバに問い合わせを行う
+
+#### None
+
+- クラスタ外のDNS設定サーバを参照させたいケースで利用する
+
+#### Default
+
+- Kubernetes NodeのDNS設定をそのまま引き継ぎたいケースで利用する
+- 注意点
+  - クラスタ内DNSを利用したサービスディスカバリができなくなる
+
+#### ClusterFirstWithHostNet
+
+- hostNetworkを利用したPodでクラスタ内DNSを参照させたいケースで利用する
+- `hostNetwork: true`の場合は、Kubernetes Nodeのネットワーク設定(DNS設定など)が利用されてしまうため、`ClusterFirstWithHostNet`を明示的に指定する必要がある
 
 ## 5.3 ReplicaSet ／ ReplicationController
 
