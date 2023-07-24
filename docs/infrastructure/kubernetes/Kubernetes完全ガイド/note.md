@@ -1003,41 +1003,71 @@
 
   ```mermaid
   flowchart RL
-    subgraph A["Pod"]
+    subgraph Pod
       direction RL
-      A1["Config Updater<br>(変更の検知)"]
-      A2["Application<br>(動的な設定の変更)"]
-      A1--設定の動的書き換え-->A2
+      A["Config Updater<br>(変更の検知)"]
+      B["Application<br>(動的な設定の変更)"]
+      A--設定の動的書き換え-->B
     end
   ```
 
   ```mermaid
   flowchart RL
-    subgraph B["Pod"]
+    subgraph Pod
       direction RL
-      B1["Git Syncer<br>(Gitリポジトリの内容と同期)"]
-      B2[("ローカルストレージ")]
-      B3["Application<br>(ローカルストレージのファイルを利用)"]
-      B1-->B2-->B3
+      A["Git Syncer<br>(Gitリポジトリの内容と同期)"]
+      B[("ローカルストレージ")]
+      C["Application<br>(ローカルストレージのファイルを利用)"]
+      A-->B-->C
     end
 
-    Git-.->B1
+    Git-.->A
   ```
 
   ```mermaid
   flowchart LR
-    subgraph B["Pod"]
+    subgraph Pod
       direction LR
-      B1["S3 Transfer<br>(オブジェクトストレージへ転送)"]
-      B2[("ローカルストレージ")]
-      B3["Application<br>(ログの出力)"]
-      B3-->B2-->B1
+      A["S3 Transfer<br>(オブジェクトストレージへ転送)"]
+      B[("ローカルストレージ")]
+      C["Application<br>(ログの出力)"]
+      C-->B-->A
     end
 
-    B1-.->S3
+    A-.->S3
   ```
 
 #### アンバサダーパターン
+
+- メインコンテナが外部システムと接続する際に、代理で中継を行うサブコンテナ（アンバサダーコンテナ）を内包したパターン
+
+  ```mermaid
+  flowchart LR
+    subgraph Pod
+      direction LR
+      A["Application<br>(DBへのRead/Write)"]
+      B["CloudSQL Proxy<br>(CloudSQLへの転送)"]
+      A--DBへの接続<br>localhost-->B
+    end
+
+    B-.->DB
+  ```
+
+  ```mermaid
+  flowchart LR
+    subgraph Pod
+      direction LR
+      A["Application<br>(RedisへのRead/Write)"]
+      B["Redis Proxy<br>(ShardingされたRedisへの転送)"]
+      A--Redisへの接続<br>localhost-->B
+    end
+
+    B-.->DB
+  ```
+
+- メインコンテナからアンバサダーコンテナへの接続はlocalhostで行う
+- メリット
+  - アンバサダーコンテナによる中継を挟むことで、開発・本番での環境差を考慮する必要がなくなる（開発環境では単一DBで、本番環境では分割DBのようなケース）
 
 #### アダプタパターン
 
