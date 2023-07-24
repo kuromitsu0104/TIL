@@ -102,6 +102,10 @@
 - [第5章 Workloads APIs カテゴリ](#第5章-workloads-apis-カテゴリ)
   - [5.1 Workloads APIs カテゴリの概要](#51-workloads-apis-カテゴリの概要)
   - [5.2 Pod](#52-pod)
+    - [5.2.1 Podのデザインパターン](#521-podのデザインパターン)
+      - [サイドカーパターン](#サイドカーパターン)
+      - [アンバサダーパターン](#アンバサダーパターン)
+      - [アダプタパターン](#アダプタパターン)
   - [5.3 ReplicaSet ／ ReplicationController](#53-replicaset--replicationcontroller)
   - [5.4 Deployment](#54-deployment)
   - [5.5 DaemonSet](#55-daemonset)
@@ -961,7 +965,81 @@
 
 ## 5.1 Workloads APIs カテゴリの概要
 
+- クラスタ上にコンテナを起動させるためのリソース
+- リソースの種類
+  - Pod
+  - ReplicationController
+  - ReplicaSet
+  - Deployment
+  - DaemonSet
+  - StatefulSet
+  - Job
+  - CronJob
+
 ## 5.2 Pod
+
+- Pod
+  - Workloadsリソースの最小単位のこと
+  - 1つ以上のコンテナを持つ
+  - Pod単位でIPアドレスが付与される（それぞれのコンテナは同一IPを持つことになる）
+  - それぞれのコンテナ同士はlocalhostで通信可能
+- メインコンテナ
+  - Pod内にある主要な機能を持つコンテナのこと
+- サブコンテナ
+  - メインコンテナを補助するようなコンテナのこと
+- Pod内に複数のメインコンテナを持つことは非推奨である
+
+### 5.2.1 Podのデザインパターン
+
+|                      | 役割                                       |
+| -------------------- | ------------------------------------------ |
+| サイドカーパターン   | メインコンテナに機能を追加する             |
+| アンバサダーパターン | 外部システムとのやり取りの代理を行う       |
+| アダプタパターン     | 外部からのアクセスのインターフェースとなる |
+
+#### サイドカーパターン
+
+- メインコンテナに加えて、補助的な機能を追加するコンテナを内包したパターン
+
+  ```mermaid
+  flowchart RL
+    subgraph A["Pod"]
+      direction RL
+      A1["Config Updater<br>(変更の検知)"]
+      A2["Application<br>(動的な設定の変更)"]
+      A1--設定の動的書き換え-->A2
+    end
+  ```
+
+  ```mermaid
+  flowchart RL
+    subgraph B["Pod"]
+      direction RL
+      B1["Git Syncer<br>(Gitリポジトリの内容と同期)"]
+      B2[("ローカルストレージ")]
+      B3["Application<br>(ローカルストレージのファイルを利用)"]
+      B1-->B2-->B3
+    end
+
+    Git-.->B1
+  ```
+
+  ```mermaid
+  flowchart LR
+    subgraph B["Pod"]
+      direction LR
+      B1["S3 Transfer<br>(オブジェクトストレージへ転送)"]
+      B2[("ローカルストレージ")]
+      B3["Application<br>(ログの出力)"]
+      B3-->B2-->B1
+    end
+
+    B1-.->S3
+  ```
+
+#### アンバサダーパターン
+
+#### アダプタパターン
 
 ## 5.3 ReplicaSet ／ ReplicationController
 
