@@ -119,6 +119,9 @@
     - [5.2.9 静的な名前解決の設定 (/etc/hosts)](#529-静的な名前解決の設定-etchosts)
     - [5.2.10 Workingディレクトリの設定](#5210-workingディレクトリの設定)
   - [5.3 ReplicaSet ／ ReplicationController](#53-replicaset--replicationcontroller)
+    - [5.3.1 ReplicaSetの作成](#531-replicasetの作成)
+    - [5.3.2 Podの停止とセルフヒーリング](#532-podの停止とセルフヒーリング)
+    - [5.3.3 ReplicaSetとラベル](#533-replicasetとラベル)
   - [5.4 Deployment](#54-deployment)
   - [5.5 DaemonSet](#55-daemonset)
   - [5.6 StatefulSet](#56-statefulset)
@@ -1122,10 +1125,10 @@ metadata:
   name: sample-entrypoint
 spec:
   containers:
-  - name: nginx-container-112
-    image: nginx:1.16
-    command: ["/bin/sleep"] # ENTRYPOINT命令に対応
-    args: ["3600"] # CMD命令に対応
+    - name: nginx-container-112
+      image: nginx:1.16
+      command: ['/bin/sleep'] # ENTRYPOINT命令に対応
+      args: ['3600'] # CMD命令に対応
 ```
 
 ### 5.2.6 Pod名の制限
@@ -1168,6 +1171,32 @@ spec:
 - `spec.containers[].workingDir`で上書き可能
 
 ## 5.3 ReplicaSet ／ ReplicationController
+
+- ReplicaSet
+  - Podのレプリカを作成し、指定数のPodを維持し続けるリソース
+
+### 5.3.1 ReplicaSetの作成
+
+- レプリカ数の定義
+  - `spec.replicas`
+- ReplicaSetの確認
+  - `kubectl get replicasets -o wide`
+
+### 5.3.2 Podの停止とセルフヒーリング
+
+- Podが停止すると、自動的に新たなPodを起動する
+- Podの停止
+  - `kubectl delete pod Pod名`
+
+### 5.3.3 ReplicaSetとラベル
+
+- ReplicaSetでのPod数調整は、特定のラベルを持つPodの数をカウントすることで実現
+  - `spec.selector`でカウントするPodのラベルを指定する
+  - ラベルが不一致の場合はエラーが発生する
+- Pod数が超過している場合
+  - ラベルが一致するPodから超過数を削除する
+- Pod数が不足している場合
+  - ラベルが一致するPodから不足数を追加する
 
 ## 5.4 Deployment
 
