@@ -116,6 +116,8 @@
       - [None](#none)
       - [Default](#default)
       - [ClusterFirstWithHostNet](#clusterfirstwithhostnet)
+    - [5.2.9 静的な名前解決の設定 (/etc/hosts)](#529-静的な名前解決の設定-etchosts)
+    - [5.2.10 Workingディレクトリの設定](#5210-workingディレクトリの設定)
   - [5.3 ReplicaSet ／ ReplicationController](#53-replicaset--replicationcontroller)
   - [5.4 Deployment](#54-deployment)
   - [5.5 DaemonSet](#55-daemonset)
@@ -1155,6 +1157,15 @@ spec:
 
 - hostNetworkを利用したPodでクラスタ内DNSを参照させたいケースで利用する
 - `hostNetwork: true`の場合は、Kubernetes Nodeのネットワーク設定(DNS設定など)が利用されてしまうため、`ClusterFirstWithHostNet`を明示的に指定する必要がある
+
+### 5.2.9 静的な名前解決の設定 (/etc/hosts)
+
+- Linux系では、DNSの前に`/etc/hosts`による静的な名前解決を行う
+- `spec.hostAliases`でコンテナ内の`/etc/hosts`を上書きできる
+
+### 5.2.10 Workingディレクトリの設定
+
+- `spec.containers[].workingDir`で上書き可能
 
 ## 5.3 ReplicaSet ／ ReplicationController
 
