@@ -122,6 +122,8 @@
     - [5.3.1 ReplicaSetの作成](#531-replicasetの作成)
     - [5.3.2 Podの停止とセルフヒーリング](#532-podの停止とセルフヒーリング)
     - [5.3.3 ReplicaSetとラベル](#533-replicasetとラベル)
+    - [5.3.4 ReplicaSetのスケーリング](#534-replicasetのスケーリング)
+    - [5.3.5 equality-based条件とset-based条件](#535-equality-based条件とset-based条件)
   - [5.4 Deployment](#54-deployment)
   - [5.5 DaemonSet](#55-daemonset)
   - [5.6 StatefulSet](#56-statefulset)
@@ -1197,8 +1199,28 @@ spec:
   - ラベルが一致するPodから超過数を削除する
 - Pod数が不足している場合
   - ラベルが一致するPodから不足数を追加する
+- 注意点
+  - 別のマニフェストファイルであっても、ラベルが同一であればPod数の調整に影響が生じる
+
+### 5.3.4 ReplicaSetのスケーリング
+
+- Pod数の変更方法
+  - マニフェストファイルを書き換えて`kubectl apply -f`を実行する
+  - `kubectl scale`コマンドでスケールする（IaCの観点では使用しないほうが良い）
+
+### 5.3.5 equality-based条件とset-based条件
 
 ## 5.4 Deployment
+
+- Deployment
+  - 複数のReplicaSetを管理するリソース
+  - ローリングアップデートやロールバックなどを実現する
+  - Kubernetesで最も推奨されるコンテナ起動方法
+- 主なフロー
+  1. Deployment: 新しいReplicaSetを作成
+  2. 新しいReplicaSet: 新しいReplicaSetのPodを増やす
+  3. 古いReplicaSet: 古いReplicaSetのPodを減らす
+  4. Deployment: 古いReplicaSetはPod数がゼロで保持する
 
 ## 5.5 DaemonSet
 
