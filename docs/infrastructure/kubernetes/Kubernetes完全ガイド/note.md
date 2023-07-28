@@ -125,6 +125,16 @@
     - [5.3.4 ReplicaSetのスケーリング](#534-replicasetのスケーリング)
     - [5.3.5 equality-based条件とset-based条件](#535-equality-based条件とset-based条件)
   - [5.4 Deployment](#54-deployment)
+    - [5.4.1 Deploymentの作成](#541-deploymentの作成)
+    - [5.4.2 Deploymentのアップデート (ReplicaSetが作成される) 条件](#542-deploymentのアップデート-replicasetが作成される-条件)
+    - [5.4.3 変更のロールバック](#543-変更のロールバック)
+    - [5.4.4 Deployment更新の一時停止](#544-deployment更新の一時停止)
+    - [5.4.5 Deploymentのアップデート戦略](#545-deploymentのアップデート戦略)
+      - [Recreate](#recreate)
+      - [RollingUpdate](#rollingupdate)
+    - [5.4.6 より詳細なアップデートパラメータ](#546-より詳細なアップデートパラメータ)
+    - [5.4.7 Deploymentのスケーリング](#547-deploymentのスケーリング)
+    - [5.4.8 マニフェストを書かずにDeploymentを作成する](#548-マニフェストを書かずにdeploymentを作成する)
   - [5.5 DaemonSet](#55-daemonset)
   - [5.6 StatefulSet](#56-statefulset)
   - [5.7 Job](#57-job)
@@ -1221,6 +1231,65 @@ spec:
   2. 新しいReplicaSet: 新しいReplicaSetのPodを増やす
   3. 古いReplicaSet: 古いReplicaSetのPodを減らす
   4. Deployment: 古いReplicaSetはPod数がゼロで保持する
+
+### 5.4.1 Deploymentの作成
+
+### 5.4.2 Deploymentのアップデート (ReplicaSetが作成される) 条件
+
+- `spec.template`に変更がある場合に、ReplicaSetを新規作成してローリングアップデートを行う
+- `spec.template`に変更がない場合は、既存のReplicaSetを利用する
+
+### 5.4.3 変更のロールバック
+
+- 実運用ではほぼ利用されることがない
+- 古いReplicaSetを再度利用することで、レプリカ数を増やして利用可能な状態にする
+  - レプリカ数ゼロの古いReplicaSetを残している意味がこれ
+- 変更履歴を確認する
+  - `kubectl rollout history deployment デプロイ名`
+- ロールバックを行う
+  - リビジョンを指定する
+    - `kubectl rollout undo deployment デプロイ名 --to-revision 1`
+  - 一つ前にロールバックする
+    - `kubectl rollout undo deployment デプロイ名`
+
+### 5.4.4 Deployment更新の一時停止
+
+- Deploymentの即時適用をしてほしくないとき
+  - 一時停止
+    - `kubectl rollout pause deployment デプロイ名`
+  - 再開
+    - `kubectl rollout resume deployment デプロイ名`
+
+### 5.4.5 Deploymentのアップデート戦略
+
+#### Recreate
+
+- `spec.strategy.type: Recreate`で指定
+- 一度すべてのPodを削除してから再度Podを作成するため、ダウンタイムが発生する
+- 切り替え完了が早い
+
+#### RollingUpdate
+
+- `spec.strategy.type: RollingUpdate`で指定
+- `spec.strategy.rollingUpdate.maxUnavaibale`
+  - アップデート中に許容する不足Pod数
+- `spec.strategy.rollingUpdate.maxSurge`
+  - アップデート中に許容する超過Pod数
+
+### 5.4.6 より詳細なアップデートパラメータ
+
+- minReadySeconds
+  - PodがReadyになってからDeploymentがPod起動完了と判断するまでの秒数
+- revisionHistoryLimit
+  - Deploymentが保持するReplicaSet数
+  - ロールバック可能な履歴数
+- progressDeadlineSeconds
+  - Recreate / RollingUpdate処理のタイムアウト時間
+  - タイムアウト経過後、自動的にロールバックされる
+
+### 5.4.7 Deploymentのスケーリング
+
+### 5.4.8 マニフェストを書かずにDeploymentを作成する
 
 ## 5.5 DaemonSet
 
