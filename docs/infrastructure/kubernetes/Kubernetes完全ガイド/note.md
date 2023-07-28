@@ -136,7 +136,17 @@
     - [5.4.7 Deploymentのスケーリング](#547-deploymentのスケーリング)
     - [5.4.8 マニフェストを書かずにDeploymentを作成する](#548-マニフェストを書かずにdeploymentを作成する)
   - [5.5 DaemonSet](#55-daemonset)
+    - [5.5.1 DaemonSetの作成](#551-daemonsetの作成)
+    - [5.5.2 DaemonSetのアップデート戦略](#552-daemonsetのアップデート戦略)
+      - [OnDelete](#ondelete)
+      - [RollingUpdate](#rollingupdate-1)
   - [5.6 StatefulSet](#56-statefulset)
+    - [5.6.1 StatefulSetの作成](#561-statefulsetの作成)
+    - [5.6.2 StatefulSetのスケーリング](#562-statefulsetのスケーリング)
+    - [5.6.3 StatefulSetのライフサイクル](#563-statefulsetのライフサイクル)
+    - [5.6.4 StatefulSetのアップデート戦略](#564-statefulsetのアップデート戦略)
+    - [5.6.5 永続化領域のデータ保持の確認](#565-永続化領域のデータ保持の確認)
+    - [5.6.6 StatefulSetの削除とPersistentVolumeの削除](#566-statefulsetの削除とpersistentvolumeの削除)
   - [5.7 Job](#57-job)
   - [5.8 CronJob](#58-cronjob)
   - [5.9 まとめ](#59-まとめ)
@@ -1293,7 +1303,61 @@ spec:
 
 ## 5.5 DaemonSet
 
+- DeamonSet
+  - ReplicaSetの特殊なパターン
+  - 各Node上に確実に配置できる
+  - FluentdやDatadogなど、全Node上で起動して監視したいケースなどで利用する
+
+### 5.5.1 DaemonSetの作成
+
+- `kind: DaemonSet`でリソース種別を指定する
+
+### 5.5.2 DaemonSetのアップデート戦略
+
+#### OnDelete
+
+- `spec.updateStrategy.type: OnDelete`
+- マニフェストファイルを更新してもPodのアップデートは行われない
+- 明示的にアップデートしたい場合は、`kubectl apply`を適用した後に、Podを手動で削除してセルフヒーリングにより新しいPodを起動させること
+
+#### RollingUpdate
+
+- `spec.updateStrategy.type: RollingUpdate`
+- `spec.updateStrategy.rollingUpdate.maxUnavailable: 許容する超過Pod数`
+  - ローリングアップデート時に許容する超過Pod数
+
 ## 5.6 StatefulSet
+
+- StatefulSet
+  - ReplicaSetの特殊なパターン
+  - ステートフルなワークロードに対応するためのリソース
+  - Pod名のサフィックスが数字のインデックスになる
+  - データを永続化するための仕組みを持つ
+
+### 5.6.1 StatefulSetの作成
+
+### 5.6.2 StatefulSetのスケーリング
+
+- サフィックスのインデックスの小さな順に、一つずつPodの削除/作成を同時に行う
+
+### 5.6.3 StatefulSetのライフサイクル
+
+### 5.6.4 StatefulSetのアップデート戦略
+
+### 5.6.5 永続化領域のデータ保持の確認
+
+- `/dev/sdb`などの別のディスク(PersistentVolume)がマウントされる
+
+### 5.6.6 StatefulSetの削除とPersistentVolumeの削除
+
+- statefulSetの削除
+  - `kubectl delete statefulset statefulSet名`
+- PersistentVolumeClaimの確認
+  - `kubectl get persistenvolumeclaims`
+- PersistentVolumeの確認
+  - `kubectl get persistenvolumes`
+- PersistentVolumeの開放
+  - `kubectl delete persistentvolumeclaims PersistentVolumeClaim名`
 
 ## 5.7 Job
 
