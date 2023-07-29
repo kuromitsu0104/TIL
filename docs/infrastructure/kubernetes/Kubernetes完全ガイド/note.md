@@ -148,6 +148,14 @@
     - [5.6.5 永続化領域のデータ保持の確認](#565-永続化領域のデータ保持の確認)
     - [5.6.6 StatefulSetの削除とPersistentVolumeの削除](#566-statefulsetの削除とpersistentvolumeの削除)
   - [5.7 Job](#57-job)
+    - [5.7.1 ReplicaSetとの違いとJobの使い所](#571-replicasetとの違いとjobの使い所)
+    - [5.7.2 Jobの作成](#572-jobの作成)
+    - [5.7.3 restartPolicyによる挙動の違い](#573-restartpolicyによる挙動の違い)
+    - [5.7.4 タスク型とワークキュー型の並列実行](#574-タスク型とワークキュー型の並列実行)
+      - [One Shot Task: 1回だけ実行するタスク](#one-shot-task-1回だけ実行するタスク)
+      - [Multi Task: N並列で実行させるタスク](#multi-task-n並列で実行させるタスク)
+      - [Multi WorkQueue: N並列で実行するワークキュー](#multi-workqueue-n並列で実行するワークキュー)
+      - [Single WorkQueue: 1個ずつ実行するワークキュー](#single-workqueue-1個ずつ実行するワークキュー)
   - [5.8 CronJob](#58-cronjob)
   - [5.9 まとめ](#59-まとめ)
 - [第6章 Service APIs カテゴリ](#第6章-service-apis-カテゴリ)
@@ -1360,6 +1368,72 @@ spec:
   - `kubectl delete persistentvolumeclaims PersistentVolumeClaim名`
 
 ## 5.7 Job
+
+- Job
+  - コンテナを利用して一度限りの処理を実行させるリソース
+  - N並列で実行を行い、指定回数のコンテナの実行（正常終了）を保証する
+
+### 5.7.1 ReplicaSetとの違いとJobの使い所
+
+- JobとReplicaSetの違い
+  - Job: Podの正常終了(停止)を前提としたリソース
+  - ReplicaSet: Podの停止を予期せぬエラーとするリソース
+- Jobの例
+  - S3への画像アップロードなどのバッチ処理
+
+### 5.7.2 Jobの作成
+
+- `kind: Job`
+
+### 5.7.3 restartPolicyによる挙動の違い
+
+- `spec.restartPolicy: Never`
+  - Pod障害時に新規のPodを作成してJobを再開する
+- `spec.restartPolicy: OnFailure`
+  - Pod障害時に同一のPodを利用してJobを再開する
+
+### 5.7.4 タスク型とワークキュー型の並列実行
+
+- `spec.completions: 10`
+  - 成功回数
+- `spec.parallelism: 2`
+  - 並列実行数
+- `spec.backoffLimit: 10`
+  - 失敗を許容する回数
+
+#### One Shot Task: 1回だけ実行するタスク
+
+- 成功の有無に関わらず、必ず1回だけ実行する
+  ```yaml
+  spec:
+    completions: 1
+    parallelism: 1
+    backoffLimit: 0
+  ```
+
+#### Multi Task: N並列で実行させるタスク
+
+#### Multi WorkQueue: N並列で実行するワークキュー
+
+- いずれか一つが正常終了したら、それ以降はPodを作成しない
+- 実行中の残りのPodは強制停止することなく、終了するまで動作し続ける
+- 処理全体の進捗管理するためのメッセージキューが別途必要
+  ```yaml
+  spec:
+    # completions: 1 #=> 指定しない
+    parallelism: 5
+    backoffLimit: 1
+  ```
+
+#### Single WorkQueue: 1個ずつ実行するワークキュー
+
+- 一度正常終了するまで1個ずつ実行するワークキュー
+  ```yaml
+  spec:
+    # completions: 1 #=> 指定しない
+    parallelism: 1
+    backoffLimit: 1
+  ```
 
 ## 5.8 CronJob
 
