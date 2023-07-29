@@ -156,7 +156,12 @@
       - [Multi Task: N並列で実行させるタスク](#multi-task-n並列で実行させるタスク)
       - [Multi WorkQueue: N並列で実行するワークキュー](#multi-workqueue-n並列で実行するワークキュー)
       - [Single WorkQueue: 1個ずつ実行するワークキュー](#single-workqueue-1個ずつ実行するワークキュー)
+    - [5.7.5 一定期間後のJobの削除](#575-一定期間後のjobの削除)
+    - [5.7.6 マニフェストを書かずにJobを作成する](#576-マニフェストを書かずにjobを作成する)
   - [5.8 CronJob](#58-cronjob)
+    - [5.8.1 CronJobの作成](#581-cronjobの作成)
+    - [CronJobを任意のタイミングで実行する](#cronjobを任意のタイミングで実行する)
+    - [5.8.4 同時実行に関する制御](#584-同時実行に関する制御)
   - [5.9 まとめ](#59-まとめ)
 - [第6章 Service APIs カテゴリ](#第6章-service-apis-カテゴリ)
   - [6.1 Service APIs カテゴリの概要](#61-service-apis-カテゴリの概要)
@@ -1435,7 +1440,35 @@ spec:
     backoffLimit: 1
   ```
 
+### 5.7.5 一定期間後のJobの削除
+
+- `spec.ttlSecondsAfterFinished`
+  - Jobが終了後に一定秒数経過でJobを削除する
+
+### 5.7.6 マニフェストを書かずにJobを作成する
+
 ## 5.8 CronJob
+
+- CronJob
+  - スケジュールされた時間にJobを作成する
+  - Jobを管理するリソース
+
+### 5.8.1 CronJobの作成
+
+### CronJobを任意のタイミングで実行する
+
+- `--from`でCronJobをもとにJobを作成できる
+  - `kubectl create job Job名 --from CronJob名`
+
+### 5.8.4 同時実行に関する制御
+
+- CronJobの同時実行に関するポリシーを設定できる
+
+  | ポリシー | 概要                                                                   |
+  | -------- | ---------------------------------------------------------------------- |
+  | Allow    | 同時実行に対して制限を行わない（デフォルトがこれ）                     |
+  | Forbid   | 前のJobが終了していない場合、次のJobは実行しない（同時実行を行わない） |
+  | Replace  | 前のJobをキャンセルし、Jobを開始する                                   |
 
 ## 5.9 まとめ
 
