@@ -53,7 +53,7 @@
   - [4.3 Kubernetes とリソース](#43-kubernetes-とリソース)
     - [4.3.1 Workloads APIs カテゴリ](#431-workloads-apis-カテゴリ)
     - [4.3.2 Service APIs カテゴリ](#432-service-apis-カテゴリ)
-    - [4.3.3 Config & Storage APIs カテゴリ](#433-config--storage-apis-カテゴリ)
+    - [4.3.3 Config \& Storage APIs カテゴリ](#433-config--storage-apis-カテゴリ)
     - [4.3.4 Cluster APIs カテゴリ](#434-cluster-apis-カテゴリ)
     - [4.3.5 Metadata APIs カテゴリ](#435-metadata-apis-カテゴリ)
   - [4.4 Namespace による仮想的なクラスタの分離](#44-namespace-による仮想的なクラスタの分離)
@@ -77,7 +77,6 @@
         - [正式に組み込まれる前の機能の設定を行う](#正式に組み込まれる前の機能の設定を行う)
       - [ラベル (label)](#ラベル-label)
         - [システムが利用するラベル](#システムが利用するラベル)
-        - [システムが利用するラベル](#システムが利用するラベル-1)
     - [4.5.11 Pruneによるリソースの削除 (--pruneオプション)](#4511-pruneによるリソースの削除---pruneオプション)
     - [4.5.12 エディターによる編集j (edit)](#4512-エディターによる編集j-edit)
     - [4.5.13 リソースの一部情報の更新 (set)](#4513-リソースの一部情報の更新-set)
@@ -659,6 +658,7 @@
 ### 4.5.7 generateNameによるランダムな名前のリソースの作成
 
 - マニフェストファイルでランダムな名前のリソースを定義可能
+
   ```yaml
   apiVersion: v1
   kind: Pod
@@ -669,6 +669,7 @@
       - name: nginx-container
         image: nginx:1.16
   ```
+
 - 注意点
   - createでのみ利用可能
   - applyでは不可能
@@ -700,6 +701,7 @@
 #### 複数のマニフェストファイルを同時に適用する
 
 - ディレクトリ構成が以下の場合
+
   ```
   ./
   ├── sample-pod1.yaml
@@ -707,6 +709,7 @@
   └── innerdir
       └── sample-pod3.yaml
   ```
+
 - ディレクトリ内のマニフェストファイルを適用
   - `kubectl apply -f ./`
 - ディレクトリ内のマニフェストファイルを再帰的に適用（サブディレクトリ内のマニフェストも適用）
@@ -715,6 +718,7 @@
 #### マニフェストファイルの設計指針
 
 - マイクロサービス単位でマニフェストファイルを分割するパターン
+
   ```
   ./whole-system
   ├── microservice-A.yaml (Deployment + Service)
@@ -722,6 +726,7 @@
   ├── microservice-C.yaml (Deployment + Service)
   └── microservice-D.yaml (Deployment + Service)
   ```
+
   - メリット
     - マイクロサービス単位で適用できること
 - マイクロサービス単位でディレクトリを分割するパターン
@@ -785,9 +790,6 @@
 
 - ラベルをもとにリソースをフィルタリングしたり指定できる
   - `kubectl get pods -l label1=val1,label2`
-
-##### システムが利用するラベル
-
 - ラベルが衝突することによる副作用が発生するケースが考えられる
   - Podの数を維持するリソース(ReplicaSet)にて、停止させるべきでないPodを停止させてしまうケース
   - ロードバランサからPodにリクエストを転送するリソース(LoadBalancer)にて、転送するべきでないPodに転送してしまうケース
@@ -1409,6 +1411,7 @@ spec:
 #### One Shot Task: 1回だけ実行するタスク
 
 - 成功の有無に関わらず、必ず1回だけ実行する
+
   ```yaml
   spec:
     completions: 1
@@ -1423,6 +1426,7 @@ spec:
 - いずれか一つが正常終了したら、それ以降はPodを作成しない
 - 実行中の残りのPodは強制停止することなく、終了するまで動作し続ける
 - 処理全体の進捗管理するためのメッセージキューが別途必要
+
   ```yaml
   spec:
     # completions: 1 #=> 指定しない
@@ -1433,6 +1437,7 @@ spec:
 #### Single WorkQueue: 1個ずつ実行するワークキュー
 
 - 一度正常終了するまで1個ずつ実行するワークキュー
+
   ```yaml
   spec:
     # completions: 1 #=> 指定しない
