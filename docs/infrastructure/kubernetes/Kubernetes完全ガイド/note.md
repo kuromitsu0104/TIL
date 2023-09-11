@@ -161,6 +161,9 @@
     - [5.8.1 CronJobの作成](#581-cronjobの作成)
     - [CronJobを任意のタイミングで実行する](#cronjobを任意のタイミングで実行する)
     - [5.8.4 同時実行に関する制御](#584-同時実行に関する制御)
+    - [5.8.5 実行開始期限に関する制御](#585-実行開始期限に関する制御)
+    - [5.8.6 CronJobの履歴](#586-cronjobの履歴)
+    - [5.8.7 マニフェストを書かずにCronJobを作成する](#587-マニフェストを書かずにcronjobを作成する)
   - [5.9 まとめ](#59-まとめ)
 - [第6章 Service APIs カテゴリ](#第6章-service-apis-カテゴリ)
   - [6.1 Service APIs カテゴリの概要](#61-service-apis-カテゴリの概要)
@@ -1474,6 +1477,26 @@ spec:
   | Allow    | 同時実行に対して制限を行わない（デフォルトがこれ）                     |
   | Forbid   | 前のJobが終了していない場合、次のJobは実行しない（同時実行を行わない） |
   | Replace  | 前のJobをキャンセルし、Jobを開始する                                   |
+
+### 5.8.5 実行開始期限に関する制御
+
+- CronJobは、指定時刻にMaster NodeがJobを作成する
+- Master Nodeがダウンしていた場合などの、作成開始時刻の遅れの許容値を設定可能
+  - `spec.startingDeadlineSeconds`
+
+### 5.8.6 CronJobの履歴
+
+- Jobを保存する数を指定できる
+
+  | ポリシー | 概要 |
+  | - | - |
+  | spec.successfulJobsHistoryLimit | 成功したJobを保存する数 |
+  | spec.failedJobsHistoryLimit | 失敗したJobを保存する数 |
+
+- `kubectl logs`でログを確認したいときに、Jobに基づくPodのログを確認できる
+- ただし、実運用ではログ集約基盤を用意して対応すべき
+
+### 5.8.7 マニフェストを書かずにCronJobを作成する
 
 ## 5.9 まとめ
 
