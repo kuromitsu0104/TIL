@@ -168,6 +168,7 @@
 - [第6章 Service APIs カテゴリ](#第6章-service-apis-カテゴリ)
   - [6.1 Service APIs カテゴリの概要](#61-service-apis-カテゴリの概要)
   - [6.2 Kubernetes クラスタのネットワークとService](#62-kubernetes-クラスタのネットワークとservice)
+    - [6.2.1 Pod宛トラフィックのロードバランシング](#621-pod宛トラフィックのロードバランシング)
   - [6.3 ClusterIP Service](#63-clusterip-service)
   - [6.4 ExternalIP Service](#64-externalip-service)
   - [6.5 NodePort Service](#65-nodeport-service)
@@ -1504,7 +1505,30 @@ spec:
 
 ## 6.1 Service APIs カテゴリの概要
 
+- Service
+  - ClusterIP
+  - ExternalIP (ClusterIPの一種)
+  - NodePort
+  - LoadBalancer
+  - Headless (None)
+  - ExternalName
+  - None-Selector
+- Ingress
+
 ## 6.2 Kubernetes クラスタのネットワークとService
+
+- 同じPod内では同じIPアドレスが割り当てられる
+- コンテナとの通信方法
+  - 同じPod内のコンテナとの通信: localhost
+  - 別Podのコンテナとの通信: 別PodのIP
+- kubernetesの内部ネットワーク
+  - ノードごとに異なるネットワークセグメントを構成
+
+### 6.2.1 Pod宛トラフィックのロードバランシング
+
+- Service
+  - 受信したトラフィックを複数Podにロードバランシングする機能を提供する
+  - DeploymentによりPodを起動するたびに、それぞれ異なるIPが割り当てられるが、Serviceは自動的に調べてロードバランシングしてくれる
 
 ## 6.3 ClusterIP Service
 
