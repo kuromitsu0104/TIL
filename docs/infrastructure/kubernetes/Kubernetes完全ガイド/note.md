@@ -169,6 +169,12 @@
   - [6.1 Service APIs カテゴリの概要](#61-service-apis-カテゴリの概要)
   - [6.2 Kubernetes クラスタのネットワークとService](#62-kubernetes-クラスタのネットワークとservice)
     - [6.2.1 Pod宛トラフィックのロードバランシング](#621-pod宛トラフィックのロードバランシング)
+      - [複数ポートの割り当て](#複数ポートの割り当て)
+      - [名前によるポートの参照](#名前によるポートの参照)
+    - [6.2.2 クラスタ内DNSとサービスディスカバリ](#622-クラスタ内dnsとサービスディスカバリ)
+      - [環境変数を利用したサービスディスカバリ](#環境変数を利用したサービスディスカバリ)
+      - [DNS Aレコードを利用したサービスディスカバリ](#dns-aレコードを利用したサービスディスカバリ)
+      - [DNS SRVレコードを利用したサービスディスカバリ](#dns-srvレコードを利用したサービスディスカバリ)
   - [6.3 ClusterIP Service](#63-clusterip-service)
   - [6.4 ExternalIP Service](#64-externalip-service)
   - [6.5 NodePort Service](#65-nodeport-service)
@@ -1529,6 +1535,62 @@ spec:
 - Service
   - 受信したトラフィックを複数Podにロードバランシングする機能を提供する
   - DeploymentによりPodを起動するたびに、それぞれ異なるIPが割り当てられるが、Serviceは自動的に調べてロードバランシングしてくれる
+  - ほぼ均等にロードバランシングしてくれる
+- ClusterIP
+  - クラスタ内からのみ接続可能なIPアドレス
+
+#### 複数ポートの割り当て
+
+- ClusterIP Serviceに複数ポートを割り当てる
+- http, httpsのClusterIPを揃えたいときに、一つのIPに複数のPortを持たせることがある
+
+  ```yaml
+  spec:
+    type: ClusterIP
+    Ports:
+    - name: "http-port"
+      protocol: "TCP"
+      port: 8080
+      targetPort: 80
+    - name: "https-port"
+      protocol: "TCP"
+      port: 8443
+      targetPort: 443
+  ```
+
+#### 名前によるポートの参照
+
+```yaml
+kind: Pod
+spec:
+  ports:
+    name: http # ポートに名前付け
+```
+
+```yaml
+kind: Service
+spec:
+  type: ClusterIP
+  Ports:
+    targetPort: http # 名前からポート番号を参照
+```
+
+### 6.2.2 クラスタ内DNSとサービスディスカバリ
+
+- サービスディスカバリ
+  - Serviceに属するPodを列挙したり、Serviceの名前からエンドポイントの情報を返すこと
+- サービスディスカバリの方法
+  - 環境変数を利用したサービスディスカバリ
+  - DNS Aレコードを利用したサービスディスカバリ
+  - DNS SRVレコードを利用したサービスディスカバリ
+
+#### 環境変数を利用したサービスディスカバリ
+
+- Serviceの情報は、Pod内の環境変数からも参照できる
+
+#### DNS Aレコードを利用したサービスディスカバリ
+
+#### DNS SRVレコードを利用したサービスディスカバリ
 
 ## 6.3 ClusterIP Service
 
