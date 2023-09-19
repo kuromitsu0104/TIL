@@ -175,6 +175,7 @@
       - [環境変数を利用したサービスディスカバリ](#環境変数を利用したサービスディスカバリ)
       - [DNS Aレコードを利用したサービスディスカバリ](#dns-aレコードを利用したサービスディスカバリ)
       - [DNS SRVレコードを利用したサービスディスカバリ](#dns-srvレコードを利用したサービスディスカバリ)
+    - [6.2.3 クラスタ内DNSとクラスタ外DNS](#623-クラスタ内dnsとクラスタ外dns)
   - [6.3 ClusterIP Service](#63-clusterip-service)
   - [6.4 ExternalIP Service](#64-externalip-service)
   - [6.5 NodePort Service](#65-nodeport-service)
@@ -1590,7 +1591,32 @@ spec:
 
 #### DNS Aレコードを利用したサービスディスカバリ
 
+- IPアドレスはService作成のたびに変わるため、明示的にIPを指定すると管理しづらくなる
+- DNS名を指定することで、IPアドレスの変更を気にしなくてもよくなる
+
+```bash
+kubectl run --image=amsy810/tools:v2.0 --restart=Never --rm -i testpod --command -- curl -s http://sample-clusterip:8080
+
+#=>
+Host=sample-clusterip  Path=/  From=sample-deployment-6d56f445cf-nvxbx  ClientIP=172.17.125.73  XFF=
+```
+
+- FQDN
+  - `[Service].[Namespace].svc.cluster.local`
+  - 実態としては`[Service].[Namespace]`でも繋がる
+
 #### DNS SRVレコードを利用したサービスディスカバリ
+
+- SRVレコード
+  - Port名とProtocolを利用して、Serviceを提供しているPort番号を含めたエンドポイントをDNSで解決する仕組み
+- FQDN
+  - `[_ServiceのPort名].[_Protocol].[Service名].[Namespace].svc.cluster.local`
+
+```bash
+kubectl run --image=amsy810/tools:v2.0 --restart=Never --rm -i testpod --command -- dif _http-port._tcp.sample-clusterip.default.svc.cluster.local SRV
+```
+
+### 6.2.3 クラスタ内DNSとクラスタ外DNS
 
 ## 6.3 ClusterIP Service
 
