@@ -182,6 +182,7 @@
     - [6.3.1 ClusterIP Serviceの作成](#631-clusterip-serviceの作成)
     - [6.3.2 ClusterIP 仮想IPの静的な指定](#632-clusterip-仮想ipの静的な指定)
   - [6.4 ExternalIP Service](#64-externalip-service)
+    - [6.4.1 ExternalIP Serviceの作成](#641-externalip-serviceの作成)
   - [6.5 NodePort Service](#65-nodeport-service)
   - [6.6 LoadBalancer Service](#66-loadbalancer-service)
   - [6.7 Service のその他の機能](#67-service-のその他の機能)
@@ -1650,6 +1651,21 @@ kubectl run --image=amsy810/tools:v2.0 --restart=Never --rm -i testpod --command
 - ClusterIPは後から変更不可能。「削除 → 作成」で作り直すしかない
 
 ## 6.4 ExternalIP Service
+
+- 特定のKubernetes NodeのIPアドレスで受信したトラフィックを、クラスタ内のコンテナに転送することで外部疎通性を確率するServiceのこと
+- 特別な理由がない限り、NodePort Serviceを利用したほうが良い
+
+### 6.4.1 ExternalIP Serviceの作成
+
+- `type: ClusterIP`
+- `spec.externalIPs`
+  - Kubernetes NodeのIPを指定
+- `spec.ports[].port`
+  - ExternalIPで受け付けるPort番号
+- `spec.ports[].targetPort`
+  - 転送先のコンテナのPort番号
+- `spec.selector.app`
+  - 転送先のPod名
 
 ## 6.5 NodePort Service
 
