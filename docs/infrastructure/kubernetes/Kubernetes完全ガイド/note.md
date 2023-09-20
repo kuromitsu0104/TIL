@@ -10,7 +10,8 @@
 # 学習アウトプット<!-- omit in toc -->
 
 - [ ] Kubernetesの基礎知識やキーワードを整理してリポジトリに反映する
-- [ ] 「Rails + Nginx」をminikube上で実行する
+- [ ] 「Rails + Nginx」を自宅サーバ（k8sクラスタ）で実行する
+- [ ] 個人的なバッチ処理を自宅サーバ（k8sクラスタ）のCronJobで実行する
 - [ ] 上記の構築手順を技術記事にして公開する
 
 # 目次<!-- omit in toc -->
@@ -176,7 +177,10 @@
       - [DNS Aレコードを利用したサービスディスカバリ](#dns-aレコードを利用したサービスディスカバリ)
       - [DNS SRVレコードを利用したサービスディスカバリ](#dns-srvレコードを利用したサービスディスカバリ)
     - [6.2.3 クラスタ内DNSとクラスタ外DNS](#623-クラスタ内dnsとクラスタ外dns)
+    - [6.2.4 Node Local DNS Cache](#624-node-local-dns-cache)
   - [6.3 ClusterIP Service](#63-clusterip-service)
+    - [6.3.1 ClusterIP Serviceの作成](#631-clusterip-serviceの作成)
+    - [6.3.2 ClusterIP 仮想IPの静的な指定](#632-clusterip-仮想ipの静的な指定)
   - [6.4 ExternalIP Service](#64-externalip-service)
   - [6.5 NodePort Service](#65-nodeport-service)
   - [6.6 LoadBalancer Service](#66-loadbalancer-service)
@@ -1618,7 +1622,32 @@ kubectl run --image=amsy810/tools:v2.0 --restart=Never --rm -i testpod --command
 
 ### 6.2.3 クラスタ内DNSとクラスタ外DNS
 
+- Podは基本的にクラスタ内DNSで名前解決する
+
+### 6.2.4 Node Local DNS Cache
+
+- 各ノードのローカル上にDNSキャッシュサーバを用意する仕組みのこと
+
 ## 6.3 ClusterIP Service
+
+- `type: ClusterIP`
+- クラスタ内からのみ疎通可能なInternal Networkの仮想IPが割り当てられる
+
+### 6.3.1 ClusterIP Serviceの作成
+
+- `spec.ports[].port`
+  - ClusterIPで受け付けるPort番号
+- `spec.ports[].targetPort`
+  - 転送先のコンテナのPort番号
+- `spec.selector.app`
+  - 転送先のPod名
+
+### 6.3.2 ClusterIP 仮想IPの静的な指定
+
+- 基本的に、クラスタ内DNSレコードでホストを指定するのが望ましい
+- IPアドレス指定が必要な場合は、ClusterIPを静的に指定することも可能
+- `spec.clusterIP`
+- ClusterIPは後から変更不可能。「削除 → 作成」で作り直すしかない
 
 ## 6.4 ExternalIP Service
 
