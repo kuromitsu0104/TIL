@@ -21,7 +21,7 @@
 
 ### Inbox
 
-- [1日1問、半年以内に習得 シェル・ワンライナー 160本ノック](/docs/inbox/1日1問、半年以内に習得 シェル・ワンライナー 160本ノック/note.md)
+- [1日1問、半年以内に習得 シェル・ワンライナー 160本ノック](/docs/inbox/shell_oneliner/note.md)
 
 ### Algorithm
 
