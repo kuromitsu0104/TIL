@@ -6,6 +6,7 @@
 
 ### Categories<!-- omit in toc -->
 
+- [Inbox](#inbox)
 - [Algorithm](#algorithm)
 - [AWS](#aws)
 - [Database Design](#database-design)
@@ -17,6 +18,10 @@
 - [TypeScript](#typescript)
 
 ---
+
+### Inbox
+
+- [1日1問、半年以内に習得 シェル・ワンライナー 160本ノック](/docs/inbox/1日1問、半年以内に習得 シェル・ワンライナー 160本ノック/note.md)
 
 ### Algorithm
 
