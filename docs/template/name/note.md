@@ -3,8 +3,8 @@
 - 書籍名
   - name
 
-# 学習目的
+# 学習目的<!-- omit in toc -->
 
-# アウトプット
+# アウトプット<!-- omit in toc -->
 
 # 目次<!-- omit in toc -->
