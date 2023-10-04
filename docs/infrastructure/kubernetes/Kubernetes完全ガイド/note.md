@@ -184,6 +184,8 @@
   - [6.4 ExternalIP Service](#64-externalip-service)
     - [6.4.1 ExternalIP Serviceの作成](#641-externalip-serviceの作成)
   - [6.5 NodePort Service](#65-nodeport-service)
+    - [6.5.1 NodePort Serviceの作成](#651-nodeport-serviceの作成)
+    - [6.5.2 NodePortの注意点](#652-nodeportの注意点)
   - [6.6 LoadBalancer Service](#66-loadbalancer-service)
   - [6.7 Service のその他の機能](#67-service-のその他の機能)
   - [6.8 Headless Service（None）](#68-headless-servicenone)
@@ -1652,7 +1654,7 @@ kubectl run --image=amsy810/tools:v2.0 --restart=Never --rm -i testpod --command
 
 ## 6.4 ExternalIP Service
 
-- 特定のKubernetes NodeのIPアドレスで受信したトラフィックを、クラスタ内のコンテナに転送することで外部疎通性を確率するServiceのこと
+- 特定のKubernetes NodeのIPアドレスで受信したトラフィックを、クラスタ内のコンテナに転送することで外部疎通性を確立するServiceのこと
 - 特別な理由がない限り、NodePort Serviceを利用したほうが良い
 
 ### 6.4.1 ExternalIP Serviceの作成
@@ -1668,6 +1670,27 @@ kubectl run --image=amsy810/tools:v2.0 --restart=Never --rm -i testpod --command
   - 転送先のPod名
 
 ## 6.5 NodePort Service
+
+- `すべてのKubernetes NodeのIPアドレス:Port`で受信したトラフィックを、クラスタ内のコンテナに転送することで外部疎通性を確立するServiceのこと
+
+### 6.5.1 NodePort Serviceの作成
+
+- `spec.ports[].port`
+  - ExternalIPで受け付けるPort番号
+- `spec.ports[].targetPort`
+  - 転送先のコンテナのPort番号
+- `spec.ports[].nodePort`
+  - 全Kubernetes Nodeで受け付けるPort番号
+- `spec.selector.app`
+  - 転送先のPod名
+
+### 6.5.2 NodePortの注意点
+
+- NodePortで利用できるポート範囲が決まっている
+  - GKE: 30000 ~ 32767 (Kubernetesのデフォルト値)
+- 範囲外を指定するとエラーになる
+- 複数のNodePort Serviceで同じPortを利用することもできない
+  - Kubernetes Node上で同じポートをListenできないので当然。
 
 ## 6.6 LoadBalancer Service
 
