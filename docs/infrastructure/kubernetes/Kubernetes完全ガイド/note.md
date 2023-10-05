@@ -187,7 +187,13 @@
     - [6.5.1 NodePort Serviceの作成](#651-nodeport-serviceの作成)
     - [6.5.2 NodePortの注意点](#652-nodeportの注意点)
   - [6.6 LoadBalancer Service](#66-loadbalancer-service)
+    - [6.6.1 LoadBalancer Serviceの作成](#661-loadbalancer-serviceの作成)
+    - [6.6.2 LoadBalancerが払い出す仮想IPの静的な指定](#662-loadbalancerが払い出す仮想ipの静的な指定)
+    - [6.6.3 LoadBalancerのファイアウォールルールの設定](#663-loadbalancerのファイアウォールルールの設定)
+    - [6.6.4 GKEやクラウドプロバイダでの注意点](#664-gkeやクラウドプロバイダでの注意点)
   - [6.7 Service のその他の機能](#67-service-のその他の機能)
+    - [6.7.1 セッションアフィニティ](#671-セッションアフィニティ)
+    - [6.7.2 ノード間通信の排除と転送元IPアドレスの保持](#672-ノード間通信の排除と転送元ipアドレスの保持)
   - [6.8 Headless Service（None）](#68-headless-servicenone)
   - [6.9 ExternalName Service](#69-externalname-service)
   - [6.10 None-Selector Service](#610-none-selector-service)
@@ -1694,7 +1700,35 @@ kubectl run --image=amsy810/tools:v2.0 --restart=Never --rm -i testpod --command
 
 ## 6.6 LoadBalancer Service
 
+- プロダクション環境でクラスタ外からトラフィックを受ける場合に、一番実用的で使い勝手の良いService
+- 主に、クラウドプロバイダなどで利用可能
+- クラスタ外のロードバランサに外部疎通性のある仮想IPを払い出す
+- NodePortやExternalIPでは、Kubernetes NodeのIPアドレスで通信するため、ノードが単一障害点になってしまう
+- LoadBalancer Serviceでは、外部のロードバランサをを利用するため、ノードに障害が発生したら通信を遮断するなどができる
+
+### 6.6.1 LoadBalancer Serviceの作成
+
+### 6.6.2 LoadBalancerが払い出す仮想IPの静的な指定
+
+### 6.6.3 LoadBalancerのファイアウォールルールの設定
+
+### 6.6.4 GKEやクラウドプロバイダでの注意点
+
 ## 6.7 Service のその他の機能
+
+### 6.7.1 セッションアフィニティ
+
+- セッションアフィニティとは
+  - PodからClusterIPに向けて送られたトラフィックは、ClusterIP Serviceに紐づくPodに対して転送された後、その後のトラフィックも同じPodに対して送られるようにすること
+- `spec.sessionAffinity`
+  - 転送タイプを指定
+- `spec.sessionAffinityConfig`
+  - 転送設定テーブルに残しておく秒数を指定
+- NodePort Serviceでもセッションアフィニティを有効化できるが、複数のKubernetes Nodeを構成する場合はどのNodeと通信するかによって、転送されるPodが変わってしまうので利用ケースは少ない
+
+### 6.7.2 ノード間通信の排除と転送元IPアドレスの保持
+
+<!-- TODO -->
 
 ## 6.8 Headless Service（None）
 
