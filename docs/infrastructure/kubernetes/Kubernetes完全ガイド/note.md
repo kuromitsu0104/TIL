@@ -194,8 +194,14 @@
   - [6.7 Service のその他の機能](#67-service-のその他の機能)
     - [6.7.1 セッションアフィニティ](#671-セッションアフィニティ)
     - [6.7.2 ノード間通信の排除と転送元IPアドレスの保持](#672-ノード間通信の排除と転送元ipアドレスの保持)
+    - [6.7.3 トポロジを意識したService転送](#673-トポロジを意識したservice転送)
   - [6.8 Headless Service（None）](#68-headless-servicenone)
+    - [6.8.2 Headless ServiceによるPod名の名前解決](#682-headless-serviceによるpod名の名前解決)
+    - [6.8.3 StatefulSet以外のPod名の名前解決](#683-statefulset以外のpod名の名前解決)
   - [6.9 ExternalName Service](#69-externalname-service)
+    - [6.9.1 ExternalName Serviceの作成](#691-externalname-serviceの作成)
+    - [6.9.2 外部サービスとの疎結合性の確保](#692-外部サービスとの疎結合性の確保)
+    - [6.9.3 外部サービスと内部サービス間の切り替え](#693-外部サービスと内部サービス間の切り替え)
   - [6.10 None-Selector Service](#610-none-selector-service)
   - [6.11 Ingress](#611-ingress)
   - [6.12 まとめ](#612-まとめ)
@@ -1728,11 +1734,41 @@ kubectl run --image=amsy810/tools:v2.0 --restart=Never --rm -i testpod --command
 
 ### 6.7.2 ノード間通信の排除と転送元IPアドレスの保持
 
-<!-- TODO -->
+### 6.7.3 トポロジを意識したService転送
 
 ## 6.8 Headless Service（None）
 
+### 6.8.2 Headless ServiceによるPod名の名前解決
+
+### 6.8.3 StatefulSet以外のPod名の名前解決
+
 ## 6.9 ExternalName Service
+
+### 6.9.1 ExternalName Serviceの作成
+
+### 6.9.2 外部サービスとの疎結合性の確保
+
+- 外部サービスのエンドポイントをハードコーディングするとアクセス先の切り替えが大変
+- ExternalName Serviceを利用すれば、これを変更するだけで切り替え可能になる
+
+```mermaid
+flowchart
+subgraph external
+  store01.example.com
+  store02.example.com
+end
+
+subgraph cluster
+  Pod
+  service["ExternalName Service\n[name: store]"]
+end
+
+Pod-->service
+service-->store01.example.com
+service-.->store02.example.com
+```
+
+### 6.9.3 外部サービスと内部サービス間の切り替え
 
 ## 6.10 None-Selector Service
 
