@@ -1853,6 +1853,12 @@ service-.->store02.example.com
 
 ## 7.1 Config ＆ Storage APIs カテゴリの概要
 
+- コンテナに設定ファイルやパスワードなどの機密情報などをインジェクトしたり、永続化ボリュームを提供したりするリソース
+- リソースの種類
+  - Secret
+  - ConfigMap
+  - PersistentVolumeClaim
+
 ## 7.2 環境変数の利用
 
 ## 7.3 Secret
