@@ -225,7 +225,14 @@
   - [7.1 Config ＆ Storage APIs カテゴリの概要](#71-config--storage-apis-カテゴリの概要)
   - [7.2 環境変数の利用](#72-環境変数の利用)
     - [7.2.1 静的設定](#721-静的設定)
+    - [7.2.2 Podの情報](#722-podの情報)
+    - [7.2.3 コンテナの情報](#723-コンテナの情報)
+    - [7.2.4 Secretリソースの機密情報](#724-secretリソースの機密情報)
+    - [7.2.5 ConfigMapリソースの設定値](#725-configmapリソースの設定値)
+    - [7.2.6 環境変数利用時の注意点](#726-環境変数利用時の注意点)
   - [7.3 Secret](#73-secret)
+    - [7.3.1 Secretの分類](#731-secretの分類)
+    - [7.3.2 一般的な汎用用途のSecret (Opaque)](#732-一般的な汎用用途のsecret-opaque)
   - [7.4 ConfigMap](#74-configmap)
   - [7.5 PersistentVolumeClaim](#75-persistentvolumeclaim)
   - [7.6 Volume](#76-volume)
@@ -1874,7 +1881,50 @@ service-.->store02.example.com
 
 - `spec.containers[].env`に静的な値を定義できる
 
+### 7.2.2 Podの情報
+
+- `fieldRef`でPodの情報を参照できる
+- 参照可能な値の確認コマンド
+  - `kubectl get pods -o yaml`
+
+### 7.2.3 コンテナの情報
+
+- `resourceFieldRef`でコンテナのリソースに関する情報を参照できる
+
+### 7.2.4 Secretリソースの機密情報
+
+### 7.2.5 ConfigMapリソースの設定値
+
+### 7.2.6 環境変数利用時の注意点
+
+- マニフェスト内の環境変数を参照する場合は`$(ENV_NAME)`で参照可能
+- OSからしか参照できない環境変数を利用する場合は、Entrypoint(`spec.containers[].command`)をentrypoint.shなどのシェルスクリプトにしてそこで処理する
+
 ## 7.3 Secret
+
+- 機密情報の受け渡す方法は何が考えられるか？
+  1. Dockerビルド時にコンテナイメージに埋め込んでおく
+     - 機密情報を含んだイメージをDockerレジストリにアップロードするのがセキュリティ面で好ましくない
+     - 機密情報の変更のたびにイメージをアップロードするのが利便性が悪い
+  2. PodやDeploymentのマニフェストに記載して渡す
+     - マニフェスト自体に機密情報を含むため、マニフェストファイルの管理が困難になる（セキュリティリスクになる）
+- 機密情報を別リソースとして定義しておき、Podから読み込めるようにしたのがSecretリソース
+
+### 7.3.1 Secretの分類
+
+| type | 概要 |
+| -- | -- |
+| Opaque | 一般的な汎用用途 |
+| kubernetes.io/tls | TLS証明書 |
+| kubernetes.io/basic-auth | Basic認証用 |
+| kubernetes.io/dockerconfigjson | Dockerレジストリの認証情報用 |
+| kubernetes.io/ssh-auth | SSHの認証情報用 |
+| kubernetes.io/service-account-token | Service Accountのトークン用 |
+| bootstrap.kubernetes.io/token | Bootstrapトークン用 |
+
+### 7.3.2 一般的な汎用用途のSecret (Opaque)
+
+- TODO
 
 ## 7.4 ConfigMap
 
