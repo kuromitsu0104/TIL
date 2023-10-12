@@ -224,6 +224,7 @@
 - [第7章 Config ＆ Storage APIs カテゴリ](#第7章-config--storage-apis-カテゴリ)
   - [7.1 Config ＆ Storage APIs カテゴリの概要](#71-config--storage-apis-カテゴリの概要)
   - [7.2 環境変数の利用](#72-環境変数の利用)
+    - [7.2.1 静的設定](#721-静的設定)
   - [7.3 Secret](#73-secret)
   - [7.4 ConfigMap](#74-configmap)
   - [7.5 PersistentVolumeClaim](#75-persistentvolumeclaim)
@@ -1860,6 +1861,18 @@ service-.->store02.example.com
   - PersistentVolumeClaim
 
 ## 7.2 環境変数の利用
+
+- Kubernetesで環境変数を渡す際には、Podテンプレートに`env`や`envForm`を指定する
+- 環境変数に埋め込める情報源
+  - 静的設定
+  - Podの情報
+  - コンテナの情報
+  - Secretリソースの機密情報
+  - ConfigMapリソースの設定値
+
+### 7.2.1 静的設定
+
+- `spec.containers[].env`に静的な値を定義できる
 
 ## 7.3 Secret
 
