@@ -203,7 +203,23 @@
     - [6.9.2 外部サービスとの疎結合性の確保](#692-外部サービスとの疎結合性の確保)
     - [6.9.3 外部サービスと内部サービス間の切り替え](#693-外部サービスと内部サービス間の切り替え)
   - [6.10 None-Selector Service](#610-none-selector-service)
+    - [6.10.1 None-Selector Serviceの作成](#6101-none-selector-serviceの作成)
   - [6.11 Ingress](#611-ingress)
+    - [6.11.1 リソースとコントローラ](#6111-リソースとコントローラ)
+    - [6.11.2 IngressリソースとIngress Controller](#6112-ingressリソースとingress-controller)
+    - [6.11.3 Ingressの種類](#6113-ingressの種類)
+      - [クラスタ外のロードバランサを利用したIngress](#クラスタ外のロードバランサを利用したingress)
+      - [クラスタ内にIngress用のPodをデプロイするIngress](#クラスタ内にingress用のpodをデプロイするingress)
+    - [6.11.4 Ingress Controllerのデプロイ](#6114-ingress-controllerのデプロイ)
+      - [GKE Ingress Controllerのデプロイ](#gke-ingress-controllerのデプロイ)
+      - [Nginx Ingress Controllerのデプロイ](#nginx-ingress-controllerのデプロイ)
+    - [6.11.5 Ingressリソースを作成する前の事前準備](#6115-ingressリソースを作成する前の事前準備)
+    - [6.11.6 Ingressリソースの作成](#6116-ingressリソースの作成)
+      - [GKE用のIngressリソースの作成](#gke用のingressリソースの作成)
+      - [Nginx Ingress用のIngressリソースの作成](#nginx-ingress用のingressリソースの作成)
+    - [6.11.7 X-Forwarded-For(XFF)ヘッダによるクライアントIPアドレスの参照](#6117-x-forwarded-forxffヘッダによるクライアントipアドレスの参照)
+    - [6.11.8 Ingress ClassによるIngressの分割](#6118-ingress-classによるingressの分割)
+    - [6.11.9 IngressのGAに向けた変更](#6119-ingressのgaに向けた変更)
   - [6.12 まとめ](#612-まとめ)
 - [第7章 Config ＆ Storage APIs カテゴリ](#第7章-config--storage-apis-カテゴリ)
   - [7.1 Config ＆ Storage APIs カテゴリの概要](#71-config--storage-apis-カテゴリの概要)
@@ -1772,9 +1788,66 @@ service-.->store02.example.com
 
 ## 6.10 None-Selector Service
 
+### 6.10.1 None-Selector Serviceの作成
+
 ## 6.11 Ingress
 
+### 6.11.1 リソースとコントローラ
+
+### 6.11.2 IngressリソースとIngress Controller
+
+### 6.11.3 Ingressの種類
+
+#### クラスタ外のロードバランサを利用したIngress
+
+#### クラスタ内にIngress用のPodをデプロイするIngress
+
+### 6.11.4 Ingress Controllerのデプロイ
+
+#### GKE Ingress Controllerのデプロイ
+
+#### Nginx Ingress Controllerのデプロイ
+
+### 6.11.5 Ingressリソースを作成する前の事前準備
+
+### 6.11.6 Ingressリソースの作成
+
+#### GKE用のIngressリソースの作成
+
+#### Nginx Ingress用のIngressリソースの作成
+
+### 6.11.7 X-Forwarded-For(XFF)ヘッダによるクライアントIPアドレスの参照
+
+### 6.11.8 Ingress ClassによるIngressの分割
+
+### 6.11.9 IngressのGAに向けた変更
+
 ## 6.12 まとめ
+
+- Service
+  - L4ロードバランシング
+  - クラスタ内DNSによる名前解決
+  - ラベルを利用したPodのサービスディスカバリ
+
+| Serviceの種類 | IPエンドポイントの内容 |
+| -- | -- |
+| ClusterIP | Kubernetes Cluster内でのみ疎通可能な仮想IP |
+| ExternalIP | 特定のKubernetes NodeのIPアドレス |
+| NodePort | 全Kubernetes Nodeの全IPアドレス |
+| LoadBalancer | クラスタ外で提供されているLoadBalancerの仮想IP |
+| Headless (None) | PodのIPアドレスを用いたDNS Round Robin |
+| ExternalName | CNAMEを用いた疎結合性の確保 |
+| None-Selector | 自由に宛先メンバを設定可能な様々な種別のエンドポイント |
+
+- Ingress
+  - L7ロードバランシング
+  - HTTPS終端
+  - パスベースルーティング
+
+| Ingressの種類 | 実装例 |
+| -- | -- |
+| クラスタ外のロードバランサを利用したIngress | GKE |
+| クラスタ内にIngress用のPodをデプロイするIngress | Nginx Ingress |
 
 # 第7章 Config ＆ Storage APIs カテゴリ
 
