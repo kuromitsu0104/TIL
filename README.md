@@ -42,6 +42,11 @@
 
 - Kubernetes
   - [Kubernetes完全ガイド](/docs/infrastructure/kubernetes/Kubernetes完全ガイド/note.md)
+- Rails
+  - [Books](/docs/rails/books)
+    - 書籍名
+  - [ActiveRecord](/docs/rails/active_record)
+    - [Lock関連](/docs/rails/active_record/lock/note.md)
 
 ### Language
 
