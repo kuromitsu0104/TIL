@@ -233,6 +233,20 @@
   - [7.3 Secret](#73-secret)
     - [7.3.1 Secretの分類](#731-secretの分類)
     - [7.3.2 一般的な汎用用途のSecret (Opaque)](#732-一般的な汎用用途のsecret-opaque)
+      - [kubectlでファイルから値を参照して作成する(`--from-file`)](#kubectlでファイルから値を参照して作成する--from-file)
+      - [kubectlでenvfileから値を参照して作成する(`--from-env-file`)](#kubectlでenvfileから値を参照して作成する--from-env-file)
+      - [kubectlで直接値を渡して作成する(`--from-literal`)](#kubectlで直接値を渡して作成する--from-literal)
+      - [マニフェストから作成する(`-f`)](#マニフェストから作成する-f)
+    - [7.3.3 TLSタイプのSecret](#733-tlsタイプのsecret)
+      - [kubectlで秘密鍵と証明書ファイルから作成する(--key / --cert)](#kubectlで秘密鍵と証明書ファイルから作成する--key----cert)
+    - [7.3.4 DockerレジストリタイプのSecret](#734-dockerレジストリタイプのsecret)
+      - [kubectlから直接作成する](#kubectlから直接作成する)
+      - [イメージの取得時のSecretの利用](#イメージの取得時のsecretの利用)
+    - [7.3.5 Basic認証タイプのSecret](#735-basic認証タイプのsecret)
+    - [7.3.6 SSH認証タイプのSecret](#736-ssh認証タイプのsecret)
+    - [7.3.7 Secretの利用](#737-secretの利用)
+      - [環境変数として渡す](#環境変数として渡す)
+      - [Volumeとしてマウントする](#volumeとしてマウントする)
   - [7.4 ConfigMap](#74-configmap)
   - [7.5 PersistentVolumeClaim](#75-persistentvolumeclaim)
   - [7.6 Volume](#76-volume)
@@ -1923,6 +1937,105 @@ service-.->store02.example.com
 | bootstrap.kubernetes.io/token | Bootstrapトークン用 |
 
 ### 7.3.2 一般的な汎用用途のSecret (Opaque)
+
+- 作成方法
+  - kubectlでファイルから値を参照して作成する(`--from-file`)
+  - kubectlでenvfileから値を参照して作成する(`--from-env-file`)
+  - kubectlで直接値を渡して作成する(`--from-literal`)
+  - マニフェストから作成する(`-f`)
+- Secretリソースは複数の`Key-Value値`を保存する
+
+#### kubectlでファイルから値を参照して作成する(`--from-file`)
+
+- ファイル名がKeyになるため、ファイルの拡張子は外しておくこと
+- Valueはbase64エンコードされる
+- Secretを作成
+  - `kubectl create secret generic --save-config sample-db-auth --from-file=./username --from-file=./password`
+- Secret一覧を取得
+  - `kubectl get secret -o json`
+
+#### kubectlでenvfileから値を参照して作成する(`--from-env-file`)
+
+- 一つのファイルから一括で作成する場合
+- Secretを作成
+  - `kubectl create secret generic --save-config sample-db-auth --from-env-file ./env-secret.txt`
+
+#### kubectlで直接値を渡して作成する(`--from-literal`)
+
+- 直接値を渡して作成する場合
+- Secretを作成
+  - `kubectl create secret generic --save-config sample-db-auth --from-literal=username=root --from-literal=password=rootpassword`
+
+#### マニフェストから作成する(`-f`)
+
+- マニフェストから作成する場合は、base64でエンコード済みの値をマニフェストに埋め込む
+  - `data.{env_name}`
+- 平文で記述したい場合は以下のフィールドで設定する
+  - `stringData.{env_name}`
+
+### 7.3.3 TLSタイプのSecret
+
+#### kubectlで秘密鍵と証明書ファイルから作成する(--key / --cert)
+
+### 7.3.4 DockerレジストリタイプのSecret
+
+#### kubectlから直接作成する
+
+#### イメージの取得時のSecretの利用
+
+### 7.3.5 Basic認証タイプのSecret
+
+### 7.3.6 SSH認証タイプのSecret
+
+### 7.3.7 Secretの利用
+
+- Secretをコンテナから利用するパターン
+  - 環境変数として渡す
+  - Volumeとしてマウントする
+
+#### 環境変数として渡す
+
+- Secretの一つのキーを環境変数に渡す
+
+  ```yaml
+  spec:
+    containers:
+      ...
+      env:
+      - name: DB_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: sample-db-auth
+            key: username
+  ```
+
+- Secretのすぺてのキーを環境変数に渡す
+
+  ```yaml
+  spec:
+    containers:
+      ...
+      envFrom:
+      - secretRef:
+          name: sample-db-auth
+  ```
+
+- Secretのすぺてのキーを環境変数に渡す(Keyの衝突対策あり)
+
+  ```yaml
+  spec:
+    containers:
+      ...
+      envFrom:
+      - secretRef:
+          name: sample-db-auth
+        prefix: DB1_
+      - secretRef:
+          name: sample-db-auth
+        prefix: DB2_
+  ```
+
+#### Volumeとしてマウントする
 
 - TODO
 
