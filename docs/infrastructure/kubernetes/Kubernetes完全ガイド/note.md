@@ -247,6 +247,7 @@
     - [7.3.7 Secretの利用](#737-secretの利用)
       - [環境変数として渡す](#環境変数として渡す)
       - [Volumeとしてマウントする](#volumeとしてマウントする)
+      - [動的なSecretの更新](#動的なsecretの更新)
   - [7.4 ConfigMap](#74-configmap)
   - [7.5 PersistentVolumeClaim](#75-persistentvolumeclaim)
   - [7.6 Volume](#76-volume)
@@ -2037,7 +2038,17 @@ service-.->store02.example.com
 
 #### Volumeとしてマウントする
 
-- TODO
+- 特定のKeyのみマウントする、Secret全体をマウントする2通りの方法がある
+- 特定のKeyのみマウント
+  - `spec.volumes[]`
+- Secret全体をマウント
+  - `spec.items[]`
+
+#### 動的なSecretの更新
+
+- Volumeマウントの場合は、一定期間ごと（kubeletのSync Loopのタイミング）に変更を確認してファイルを入れ替える
+  - 更新間隔はkubeletの`--sync-frequency`オプションで変更可能
+- 環境変数の場合は動的な更新は不可能
 
 ## 7.4 ConfigMap
 
