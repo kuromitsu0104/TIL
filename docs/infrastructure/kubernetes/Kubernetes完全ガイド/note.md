@@ -249,6 +249,18 @@
       - [Volumeとしてマウントする](#volumeとしてマウントする)
       - [動的なSecretの更新](#動的なsecretの更新)
   - [7.4 ConfigMap](#74-configmap)
+    - [7.4.1 ConfigMapの作成](#741-configmapの作成)
+      - [kubectlでファイルから値を参照して作成する(`--from-file`)](#kubectlでファイルから値を参照して作成する--from-file-1)
+      - [kubectlで直接値を渡して作成する(`--from-literal`)](#kubectlで直接値を渡して作成する--from-literal-1)
+      - [マニフェストから作成する(`-f`)](#マニフェストから作成する-f-1)
+    - [7.4.2 ConfigMapの利用](#742-configmapの利用)
+      - [環境変数として渡す](#環境変数として渡す-1)
+      - [Volumeとしてマウントする](#volumeとしてマウントする-1)
+    - [7.4.3 SecretとConfigMapの共通の話題](#743-secretとconfigmapの共通の話題)
+      - [SecretとConfigMapの使い分け](#secretとconfigmapの使い分け)
+      - [ConfigMapやSecretのデータマウント時にパーミッションを変更する](#configmapやsecretのデータマウント時にパーミッションを変更する)
+      - [動的なConfigMapの更新](#動的なconfigmapの更新)
+      - [ConfigMapやSecretのデータ変更を拒否する](#configmapやsecretのデータ変更を拒否する)
   - [7.5 PersistentVolumeClaim](#75-persistentvolumeclaim)
   - [7.6 Volume](#76-volume)
   - [7.7 PersistentVolume（PV）](#77-persistentvolumepv)
@@ -2038,19 +2050,118 @@ service-.->store02.example.com
 
 #### Volumeとしてマウントする
 
+- `spec.volumes[]`の`secret.items[]`でマウントできる
 - 特定のKeyのみマウントする、Secret全体をマウントする2通りの方法がある
-- 特定のKeyのみマウント
-  - `spec.volumes[]`
-- Secret全体をマウント
-  - `spec.items[]`
 
 #### 動的なSecretの更新
 
 - Volumeマウントの場合は、一定期間ごと（kubeletのSync Loopのタイミング）に変更を確認してファイルを入れ替える
   - 更新間隔はkubeletの`--sync-frequency`オプションで変更可能
-- 環境変数の場合は動的な更新は不可能
+- 環境変数の場合は動的な更新は不可能なため、変更した後にPodの再起動が必要になる
 
 ## 7.4 ConfigMap
+
+- 設定情報などのKey-Valueを保持できるリソース
+
+### 7.4.1 ConfigMapの作成
+
+- 作成方法
+  - kubectlでファイルから値を参照して作成する(`--from-file`)
+  - kubectlで直接値を渡して作成する(`--from-literal`)
+  - マニフェストから作成する(`-f`)
+
+#### kubectlでファイルから値を参照して作成する(`--from-file`)
+
+#### kubectlで直接値を渡して作成する(`--from-literal`)
+
+#### マニフェストから作成する(`-f`)
+
+- Secretとは異なり、base64エンコードは行わずに埋め込む
+
+### 7.4.2 ConfigMapの利用
+
+- Secretをコンテナから利用するパターン
+  - 環境変数として渡す
+  - Volumeとしてマウントする
+
+#### 環境変数として渡す
+
+- `spec.containers[].env`の`valueFrom.configMapKeyRef`を使って渡す
+  - ConfigMapの一つのキーを環境変数に渡す
+
+    ```yaml
+    spec:
+      containers:
+        ...
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: sample-db-auth
+              key: username
+    ```
+
+  - ConfigMapのすべてのキーを環境変数に渡す
+
+    ```yaml
+    spec:
+      containers:
+        ...
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: sample-db-auth
+    ```
+
+#### Volumeとしてマウントする
+
+- `spec.volumes[]`の`configMap.items[]`でマウントできる
+- 特定のKeyのみマウントする、ConfigMap全体をマウントする2通りの方法がある
+
+### 7.4.3 SecretとConfigMapの共通の話題
+
+#### SecretとConfigMapの使い分け
+
+- SecretとConfigMapの違い
+  - Secret: 機密情報を扱う
+  - ConfigMap: 機密情報を扱わない
+
+```mermaid
+flowchart
+subgraph PodがSecretを利用するまでの様子
+  subgraph etcd
+    Secret_1
+    Secret_2
+  end
+
+  subgraph Kubernetes Node
+    subgraph tmpfs領域
+      Secret
+    end
+
+    Pod
+  end
+end
+
+Pod--参照-->Secret
+etcd--利用するPodがある場合のみ\nover SSL/TLSで転送---->Secret
+```
+
+#### ConfigMapやSecretのデータマウント時にパーミッションを変更する
+
+- Volumeマウント時に、どのような権限でマウントするのか設定できる
+- `volumes[].{configMap, secret}.items[].mode`
+
+#### 動的なConfigMapの更新
+
+- Volumeマウントの場合は、一定期間ごと（kubeletのSync Loopのタイミング）に変更を確認してファイルを入れ替える
+  - 更新間隔はkubeletの`--sync-frequency`オプションで変更可能
+- 環境変数の場合は動的な更新は不可能なため、変更した後にPodの再起動が必要になる
+
+#### ConfigMapやSecretのデータ変更を拒否する
+
+- `immutable`をtrueにすることで、データ変更を拒否できる
 
 ## 7.5 PersistentVolumeClaim
 
