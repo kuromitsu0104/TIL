@@ -265,6 +265,8 @@
     - [7.5.1 VolumeとPersistentVolumeとPersistentVolumeClaimの違い](#751-volumeとpersistentvolumeとpersistentvolumeclaimの違い)
   - [7.6 Volume](#76-volume)
     - [7.6.1 emptyDir](#761-emptydir)
+    - [7.6.2 hostPath](#762-hostpath)
+    - [7.6.3 downwardAPI](#763-downwardapi)
   - [7.7 PersistentVolume（PV）](#77-persistentvolumepv)
   - [7.8 PersistentVolumeClaim (PVC)](#78-persistentvolumeclaim-pvc)
   - [7.9 volumeMounts で利用可能なオプション](#79-volumemounts-で利用可能なオプション)
@@ -2188,6 +2190,67 @@ etcd--利用するPodがある場合のみ\nover SSL/TLSで転送---->Secret
 - Pod用の一時的なディスク領域として利用可能
 - PodがTerminateされると削除される
 - コンテナが起動するKubernetes Node上のディスク領域が割り当てられる
+- emptyDir Volumeをマウントする
+
+  ```yaml
+  spec:
+    containers:
+      ...
+      volumeMounts:
+      - mountPath: /cache
+        name: cache-volume
+      valumes:
+      - name: cache-volume
+        emptyDir: {}
+  ```
+
+- `emptyDir.sizeLimit`でリソースの制限をかけられる
+
+  ```yaml
+  spec:
+    containers:
+      ...
+      volumeMounts:
+      - mountPath: /cache
+        name: cache-volume
+      valumes:
+      - name: cache-volume
+        emptyDir:
+          sizeLimit: 128Mi
+  ```
+
+- `emptyDir.medium`でメモリ領域を利用することも可能
+
+  ```yaml
+  spec:
+    containers:
+      ...
+      volumeMounts:
+      - mountPath: /cache
+        name: cache-volume
+      valumes:
+      - name: cache-volume
+        emptyDir:
+          medium: Memory
+          sizeLimit: 128Mi
+  ```
+
+### 7.6.2 hostPath
+
+- Kubernetes Node上の領域をコンテナにマッピングするプラグイン
+- ホスト上の任意の領域をマウントできる
+- どの領域を利用するのか指定する
+  - `type`
+    - Directory
+    - DirectoryOrCreate
+    - File
+    - Socket
+    - BlockDevice
+- セキュリティ上の観点から利用を禁止するケースもある
+
+### 7.6.3 downwardAPI
+
+- TODO
 
 ## 7.7 PersistentVolume（PV）
 
