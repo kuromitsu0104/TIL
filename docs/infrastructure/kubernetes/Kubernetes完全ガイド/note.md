@@ -267,7 +267,14 @@
     - [7.6.1 emptyDir](#761-emptydir)
     - [7.6.2 hostPath](#762-hostpath)
     - [7.6.3 downwardAPI](#763-downwardapi)
+    - [7.6.4 projected](#764-projected)
   - [7.7 PersistentVolume（PV）](#77-persistentvolumepv)
+    - [7.7.1 PersistentVolumeの種類](#771-persistentvolumeの種類)
+      - [Container Storage Interface (CSI)](#container-storage-interface-csi)
+    - [7.7.2 PersistentVolumeの作成](#772-persistentvolumeの作成)
+      - [ラベル](#ラベル)
+      - [容量](#容量)
+      - [アクセスモード](#アクセスモード)
   - [7.8 PersistentVolumeClaim (PVC)](#78-persistentvolumeclaim-pvc)
   - [7.9 volumeMounts で利用可能なオプション](#79-volumemounts-で利用可能なオプション)
   - [7.10 まとめ](#710-まとめ)
@@ -2250,9 +2257,52 @@ etcd--利用するPodがある場合のみ\nover SSL/TLSで転送---->Secret
 
 ### 7.6.3 downwardAPI
 
-- TODO
+- Podの情報などをファイルとして配置するためのプラグイン
+
+### 7.6.4 projected
+
+- Secret / ConfigMap / downwardAPI / serviceAccountTokenのボリュームマウントを1箇所のディレクトリに集約するプラグイン
 
 ## 7.7 PersistentVolume（PV）
+
+- 永続化領域として確保されるVolumeのこと
+- PersistentVolumeとしてリソースを個別に作成してから利用する
+
+### 7.7.1 PersistentVolumeの種類
+
+- ネットワーク越しにディスクをアタッチするタイプのディスク
+
+#### Container Storage Interface (CSI)
+
+### 7.7.2 PersistentVolumeの作成
+
+- 設定内容
+  - ラベル
+  - 容量
+  - アクセスモード
+  - Reclaim Policy
+  - マウントオプション
+  - StrageClass
+  - 各プラグインに特有の設定
+
+#### ラベル
+
+- type / environment / speed などのラベルをつけておかないと、PersistentVolumeの割り当てで目当てのボリュームを見つけられなくなる
+
+#### 容量
+
+#### アクセスモード
+
+- 以下の3つが定義されている
+  - ReadWriteOnce(RWO)
+    - 単一ノードからRead / Writeが可能
+  - ReadOnlyMany(ROX)
+    - 複数ノードからReadが可能
+  - ReadWriteMany(RWX)
+    - 複数ノードからRead / Writeが可能
+- Pod単位ではなくノード単位であることに注意する
+
+<!-- TODO -->
 
 ## 7.8 PersistentVolumeClaim (PVC)
 
