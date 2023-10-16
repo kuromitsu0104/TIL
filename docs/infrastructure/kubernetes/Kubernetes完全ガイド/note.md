@@ -275,6 +275,10 @@
       - [ラベル](#ラベル)
       - [容量](#容量)
       - [アクセスモード](#アクセスモード)
+      - [Reclaim Policy](#reclaim-policy)
+      - [StrageClass](#strageclass)
+      - [マウントオプション](#マウントオプション)
+      - [PersistentVolume Pluginごとの設定](#persistentvolume-pluginごとの設定)
   - [7.8 PersistentVolumeClaim (PVC)](#78-persistentvolumeclaim-pvc)
   - [7.9 volumeMounts で利用可能なオプション](#79-volumemounts-で利用可能なオプション)
   - [7.10 まとめ](#710-まとめ)
@@ -2302,7 +2306,22 @@ etcd--利用するPodがある場合のみ\nover SSL/TLSで転送---->Secret
     - 複数ノードからRead / Writeが可能
 - Pod単位ではなくノード単位であることに注意する
 
-<!-- TODO -->
+#### Reclaim Policy
+
+- Persistent Volumeを利用し終わった後の処理方法（削除・再利用など）を制御するポリシー
+- 制御内容
+  - Delete
+    - 削除する
+  - Retain
+    - 削除せず保持する
+  - Recycle(非推奨)
+    - deprecatedな制御
+
+#### StrageClass
+
+#### マウントオプション
+
+#### PersistentVolume Pluginごとの設定
 
 ## 7.8 PersistentVolumeClaim (PVC)
 
