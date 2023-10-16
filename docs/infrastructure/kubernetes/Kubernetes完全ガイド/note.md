@@ -262,7 +262,9 @@
       - [動的なConfigMapの更新](#動的なconfigmapの更新)
       - [ConfigMapやSecretのデータ変更を拒否する](#configmapやsecretのデータ変更を拒否する)
   - [7.5 PersistentVolumeClaim](#75-persistentvolumeclaim)
+    - [7.5.1 VolumeとPersistentVolumeとPersistentVolumeClaimの違い](#751-volumeとpersistentvolumeとpersistentvolumeclaimの違い)
   - [7.6 Volume](#76-volume)
+    - [7.6.1 emptyDir](#761-emptydir)
   - [7.7 PersistentVolume（PV）](#77-persistentvolumepv)
   - [7.8 PersistentVolumeClaim (PVC)](#78-persistentvolumeclaim-pvc)
   - [7.9 volumeMounts で利用可能なオプション](#79-volumemounts-で利用可能なオプション)
@@ -2165,7 +2167,27 @@ etcd--利用するPodがある場合のみ\nover SSL/TLSで転送---->Secret
 
 ## 7.5 PersistentVolumeClaim
 
+- 永続化領域を利用するためのリソース
+
+### 7.5.1 VolumeとPersistentVolumeとPersistentVolumeClaimの違い
+
+- Volume
+  - すでに存在する利用可能なボリュームをマニフェストで指定してマウントするもの
+  - マニフェストからVolumeリソースを作成したり削除したりできない
+- PersistentVolume
+  - 外部の永続Volumeを提供するシステムと連携して、ボリューム作成や削除などが可能なもの
+- PersistentVolumeClaim
+  - PodからPersistentVolumeを利用できるようにアサインするためのリソース
+
 ## 7.6 Volume
+
+- Podに対して静的に領域を指定する
+
+### 7.6.1 emptyDir
+
+- Pod用の一時的なディスク領域として利用可能
+- PodがTerminateされると削除される
+- コンテナが起動するKubernetes Node上のディスク領域が割り当てられる
 
 ## 7.7 PersistentVolume（PV）
 
