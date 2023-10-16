@@ -276,10 +276,21 @@
       - [容量](#容量)
       - [アクセスモード](#アクセスモード)
       - [Reclaim Policy](#reclaim-policy)
-      - [StrageClass](#strageclass)
+      - [StorageClass](#storageclass)
       - [マウントオプション](#マウントオプション)
       - [PersistentVolume Pluginごとの設定](#persistentvolume-pluginごとの設定)
   - [7.8 PersistentVolumeClaim (PVC)](#78-persistentvolumeclaim-pvc)
+    - [7.8.1 PersistentVolumeClaimの設定](#781-persistentvolumeclaimの設定)
+    - [7.8.2 PersistentVolumeClaimの作成](#782-persistentvolumeclaimの作成)
+    - [7.8.3 Podからの利用](#783-podからの利用)
+    - [7.8.4 Dynamic Provisioning](#784-dynamic-provisioning)
+      - [PersistentVolumeの割り当てタイミングの制御](#persistentvolumeの割り当てタイミングの制御)
+      - [GCEにおけるStorageClass](#gceにおけるstorageclass)
+      - [PersistentVolumeのブロックデバイスとしての利用](#persistentvolumeのブロックデバイスとしての利用)
+    - [7.8.6 PersistentVolumeClaimResizeによるボリュームの拡張](#786-persistentvolumeclaimresizeによるボリュームの拡張)
+    - [7.8.7 PersistentVolueClaimResizeによるボリュームのオンライン拡張](#787-persistentvolueclaimresizeによるボリュームのオンライン拡張)
+    - [7.8.8 PersistentVolumeのスナップショットとクローン](#788-persistentvolumeのスナップショットとクローン)
+    - [7.8.9 StatefulSetでのPersistentVolumeClaim(volumeClaimTemplate)](#789-statefulsetでのpersistentvolumeclaimvolumeclaimtemplate)
   - [7.9 volumeMounts で利用可能なオプション](#79-volumemounts-で利用可能なオプション)
   - [7.10 まとめ](#710-まとめ)
 - [第8章 Cluster APIs カテゴリとMetadata APIs カテゴリ](#第8章-cluster-apis-カテゴリとmetadata-apis-カテゴリ)
@@ -2317,7 +2328,7 @@ etcd--利用するPodがある場合のみ\nover SSL/TLSで転送---->Secret
   - Recycle(非推奨)
     - deprecatedな制御
 
-#### StrageClass
+#### StorageClass
 
 #### マウントオプション
 
@@ -2325,7 +2336,48 @@ etcd--利用するPodがある場合のみ\nover SSL/TLSで転送---->Secret
 
 ## 7.8 PersistentVolumeClaim (PVC)
 
+- 永続化領域の要求を行うリソース
+
+### 7.8.1 PersistentVolumeClaimの設定
+
+- 設定内容
+  - ラベルセレクタ
+  - 容量
+  - アクセスモード
+  - StorageClass
+- PersistentVolumeで定義した値で、PersistentVolumeClaimの要求にマッチするPersistentVolumeが払い出される
+
+### 7.8.2 PersistentVolumeClaimの作成
+
+### 7.8.3 Podからの利用
+
+- `spec.volumes`に`persistentVolumeClaim.claimName`を指定する
+
+### 7.8.4 Dynamic Provisioning
+
+- PersistentVolumeClaimが発行されるタイミングで動的にPersistentVolumeを作成して割り当てること
+- メリット
+  - 事前にPersistentVolumeを作成する必要がない
+  - 容量の無駄が生じない
+- `StorageClass`を定義してPersistentVolumeClaimから指定して利用する
+
+#### PersistentVolumeの割り当てタイミングの制御
+
+#### GCEにおけるStorageClass
+
+#### PersistentVolumeのブロックデバイスとしての利用
+
+### 7.8.6 PersistentVolumeClaimResizeによるボリュームの拡張
+
+### 7.8.7 PersistentVolueClaimResizeによるボリュームのオンライン拡張
+
+### 7.8.8 PersistentVolumeのスナップショットとクローン
+
+### 7.8.9 StatefulSetでのPersistentVolumeClaim(volumeClaimTemplate)
+
 ## 7.9 volumeMounts で利用可能なオプション
+
+<!-- TODO -->
 
 ## 7.10 まとめ
 
