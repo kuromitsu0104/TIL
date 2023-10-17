@@ -299,6 +299,7 @@
   - [8.1 Cluster APIs カテゴリとMetadata APIs カテゴリの概要](#81-cluster-apis-カテゴリとmetadata-apis-カテゴリの概要)
   - [8.2 Node](#82-node)
   - [8.3 Namespace](#83-namespace)
+    - [8.3.1 Namespaceの作成](#831-namespaceの作成)
   - [8.4 まとめ](#84-まとめ)
 - [第9章 リソース管理とオートスケーリング](#第9章-リソース管理とオートスケーリング)
   - [9.1 リソースの制限](#91-リソースの制限)
@@ -2415,9 +2416,53 @@ path2/--subPathあり-->/path2を/dataにマウント
 
 ## 8.1 Cluster APIs カテゴリとMetadata APIs カテゴリの概要
 
+- Cluster APIsカテゴリ
+  - セキュリティ周りの設定やクォータ設定など、クラスタの挙動を制御するためのリソース
+  - リソース種別
+    - Node
+    - Namespace
+    - PersistentVolume
+    - ResourceQuota
+    - ServiceAccount
+    - Role
+    - ClusterRole
+    - RoleBinding
+    - ClusterRoleBinding
+    - NetworkPolicy
+- Metadata APIsカテゴリ
+  - クラスタ上にコンテナを起動させるのに利用するリソース
+  - リソース種別
+    - LimitRange
+    - HorizontalPodAutoscaler
+    - PodDisruptionBudget
+    - CustomResourceDefinition
+
 ## 8.2 Node
 
+- ノード一覧
+  - `kubectl get nodes -o yaml`
+  - プログラム中で処理するときに利用しやすい
+- 現在のリソース使用量
+  - `kubectl describe node`
+  - 目視するのに利用しやすい
+
 ## 8.3 Namespace
+
+- 仮想的なKubernetesクラスタの分離機能のこと
+
+### 8.3.1 Namespaceの作成
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sample-namespace
+```
+
+- Namespace内のPod一覧
+  - `kubectl get pods -n sample-namespace`
+- すべてのNamespaceのPod一覧
+  - `kubectl get pods -A`
 
 ## 8.4 まとめ
 
