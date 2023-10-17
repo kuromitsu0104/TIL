@@ -303,6 +303,8 @@
   - [8.4 まとめ](#84-まとめ)
 - [第9章 リソース管理とオートスケーリング](#第9章-リソース管理とオートスケーリング)
   - [9.1 リソースの制限](#91-リソースの制限)
+    - [9.1.1 CPU / メモリのリソース制限](#911-cpu--メモリのリソース制限)
+    - [9.1.2 Ephemeral Storageのリソース制御](#912-ephemeral-storageのリソース制御)
   - [9.2 Cluster Autoscaler とリソース不足](#92-cluster-autoscaler-とリソース不足)
   - [9.3 LimitRange によるリソース制限](#93-limitrange-によるリソース制限)
   - [9.4 QoS Class](#94-qos-class)
@@ -2469,6 +2471,44 @@ metadata:
 # 第9章 リソース管理とオートスケーリング
 
 ## 9.1 リソースの制限
+
+- コンテナ単位でリソース制限が可能
+
+### 9.1.1 CPU / メモリのリソース制限
+
+- 各リソースの単位
+
+  | リソース種別 | 単位 |
+  | -- | -- |
+  | CPU | 1 = 1000m = 1vCPU |
+  | メモリ | 1G = 1000M (1Gi = 1024Mi) |
+
+- CPU / メモリのリソース指定例
+
+  ```yaml
+  spec:
+    ...
+    template:
+      ...
+      spec:
+        containers:
+        - name: ...
+          ...
+          resources:
+            requests:
+              memory: 1024Mi
+              cpu: 500m
+            limits:
+              memory: 2048Mi
+              cpu: 1000m
+  ```
+
+  - `spec.containers[].resources.requests`: リソースの下限値
+  - `spec.containers[].resources.limits`: リソースの上限値
+
+### 9.1.2 Ephemeral Storageのリソース制御
+
+<!-- TODO -->
 
 ## 9.2 Cluster Autoscaler とリソース不足
 
