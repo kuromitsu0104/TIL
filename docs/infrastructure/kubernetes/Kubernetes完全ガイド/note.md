@@ -292,6 +292,8 @@
     - [7.8.8 PersistentVolumeのスナップショットとクローン](#788-persistentvolumeのスナップショットとクローン)
     - [7.8.9 StatefulSetでのPersistentVolumeClaim(volumeClaimTemplate)](#789-statefulsetでのpersistentvolumeclaimvolumeclaimtemplate)
   - [7.9 volumeMounts で利用可能なオプション](#79-volumemounts-で利用可能なオプション)
+    - [7.9.1 ReadOnlyマウント](#791-readonlyマウント)
+    - [7.9.3 subPath](#793-subpath)
   - [7.10 まとめ](#710-まとめ)
 - [第8章 Cluster APIs カテゴリとMetadata APIs カテゴリ](#第8章-cluster-apis-カテゴリとmetadata-apis-カテゴリ)
   - [8.1 Cluster APIs カテゴリとMetadata APIs カテゴリの概要](#81-cluster-apis-カテゴリとmetadata-apis-カテゴリの概要)
@@ -2377,7 +2379,35 @@ etcd--利用するPodがある場合のみ\nover SSL/TLSで転送---->Secret
 
 ## 7.9 volumeMounts で利用可能なオプション
 
-<!-- TODO -->
+### 7.9.1 ReadOnlyマウント
+
+- `volumeMounts[].readOnly`
+- hostPathのようなホスト領域をどうしてもマウントしたい場合は、最低限ReadOnlyでマウントする
+
+### 7.9.3 subPath
+
+- 特定のディレクトリをルートとしてマウントする
+
+```mermaid
+flowchart
+subgraph マウント方法
+  subgraph Volume
+    /
+    path1/
+    path2/
+  end
+
+  subgraph Pod
+    /dataにマウント
+    /path1を/dataにマウント
+    /path2を/dataにマウント
+  end
+end
+
+/--subPathなし-->/dataにマウント
+path1/--subPathあり-->/path1を/dataにマウント
+path2/--subPathあり-->/path2を/dataにマウント
+```
 
 ## 7.10 まとめ
 
