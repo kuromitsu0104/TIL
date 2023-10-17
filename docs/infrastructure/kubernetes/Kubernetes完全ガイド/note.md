@@ -305,8 +305,17 @@
   - [9.1 リソースの制限](#91-リソースの制限)
     - [9.1.1 CPU / メモリのリソース制限](#911-cpu--メモリのリソース制限)
     - [9.1.2 Ephemeral Storageのリソース制御](#912-ephemeral-storageのリソース制御)
+    - [9.1.3 システムに割り当てられるリソースとEviction Manager](#913-システムに割り当てられるリソースとeviction-manager)
+    - [9.1.4 GPUなどのリソース制限](#914-gpuなどのリソース制限)
+      - [NVIDIA製GPU](#nvidia製gpu)
+    - [9.1.5 オーバーコミットとリソース不足](#915-オーバーコミットとリソース不足)
+    - [9.1.6 複数コンテナ利用時のリソース割り当て](#916-複数コンテナ利用時のリソース割り当て)
   - [9.2 Cluster Autoscaler とリソース不足](#92-cluster-autoscaler-とリソース不足)
   - [9.3 LimitRange によるリソース制限](#93-limitrange-によるリソース制限)
+    - [9.3.1 デフォルトで作成されているLimitRange](#931-デフォルトで作成されているlimitrange)
+    - [9.3.2 Containerに対するLimitRange](#932-containerに対するlimitrange)
+    - [9.3.3 Podに対するLimitRange](#933-podに対するlimitrange)
+    - [9.3.4 PersistentVolumeClaimに対するLimitRange](#934-persistentvolumeclaimに対するlimitrange)
   - [9.4 QoS Class](#94-qos-class)
   - [9.5 ResourceQuota によるNamespace のリソースクォータ制限](#95-resourcequota-によるnamespace-のリソースクォータ制限)
   - [9.6 HorizontalPodAutoscaler（HPA）](#96-horizontalpodautoscalerhpa)
@@ -2508,11 +2517,64 @@ metadata:
 
 ### 9.1.2 Ephemeral Storageのリソース制御
 
-<!-- TODO -->
+### 9.1.3 システムに割り当てられるリソースとEviction Manager
+
+- CPU / Memory / Ephemeral Storageの一般的なリソースについては、システム用のリソースが確保されている
+- Kubernetes Nodeで確保されているシステム用のリソース
+
+  | 設定項目 | 概要 |
+  | -- | -- |
+  | kube-reserved | Kubernetesのシステムコンポーネントやコンテナランタイムに確保されるリソース |
+  | system-reserved | OSに深く関わるデーモンなどに確保されるリソース |
+
+- Podに割り当て可能なリソース(Allocatable)は、Kubernetes Nodeにあるリソースの総量から「kube-reserved」と「system-reserved」を除いた量になる
+- Eviction Managerからシステム全体のリソースを管理する(超過したらPodをEvictする)
+
+### 9.1.4 GPUなどのリソース制限
+
+- GPUもRequests / Limitの制限を掛けられる
+
+#### NVIDIA製GPU
+
+### 9.1.5 オーバーコミットとリソース不足
+
+### 9.1.6 複数コンテナ利用時のリソース割り当て
 
 ## 9.2 Cluster Autoscaler とリソース不足
 
+- Kubernetesクラスタ自体のオートスケーリングのこと
+- 需要に応じてKubernetes Nodeを自動的に追加していく機能
+- Cluster Autoscalerの発動タイミング
+  - Pending状態のPodができたとき
+  - Requests / Limitの適切な設定が必要になる
+
 ## 9.3 LimitRange によるリソース制限
+
+- Podなどに対してCPUやメモリのリソースの最小値や最大値、デフォルト値などを設定できる
+- Namespaceに対して制限を掛けるため、Namespaceごとに設定が必要
+- 制限可能な項目
+
+  | 設定項目 | 概要 |
+  | -- | -- |
+  | default | デフォルトのLimits |
+  | defaultRequest | デフォルトのRequests |
+  | max | 最大リソース |
+  | min | 最小リソース |
+  | maxLimitRequestRatio | Limits / Requestsの割合 |
+
+### 9.3.1 デフォルトで作成されているLimitRange
+
+### 9.3.2 Containerに対するLimitRange
+
+- `type: Container`のLimitRangeの設定で行う
+
+### 9.3.3 Podに対するLimitRange
+
+- `type: Pod`のLimitRangeの設定で行う
+
+### 9.3.4 PersistentVolumeClaimに対するLimitRange
+
+- `type: PersistentVolumeClaim`のLimitRangeの設定で行う
 
 ## 9.4 QoS Class
 
