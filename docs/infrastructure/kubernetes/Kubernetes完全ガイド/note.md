@@ -317,8 +317,14 @@
     - [9.3.3 Podに対するLimitRange](#933-podに対するlimitrange)
     - [9.3.4 PersistentVolumeClaimに対するLimitRange](#934-persistentvolumeclaimに対するlimitrange)
   - [9.4 QoS Class](#94-qos-class)
+    - [9.4.1 BestEffort](#941-besteffort)
+    - [9.4.2 Guaranteed](#942-guaranteed)
+    - [9.4.3 Burstable](#943-burstable)
   - [9.5 ResourceQuota によるNamespace のリソースクォータ制限](#95-resourcequota-によるnamespace-のリソースクォータ制限)
+    - [9.5.1 作成可能なリソース数の制限](#951-作成可能なリソース数の制限)
+    - [9.5.2 リソース使用量の制限](#952-リソース使用量の制限)
   - [9.6 HorizontalPodAutoscaler（HPA）](#96-horizontalpodautoscalerhpa)
+    - [9.6.1 HorizontalPodAutoscalerのスケーリング動作の設定](#961-horizontalpodautoscalerのスケーリング動作の設定)
   - [9.7 VerticalPodAutoscaler（VPA）](#97-verticalpodautoscalervpa)
   - [9.8 まとめ](#98-まとめ)
 - [第10章 ヘルスチェックとコンテナのライフサイクル](#第10章-ヘルスチェックとコンテナのライフサイクル)
@@ -2578,9 +2584,51 @@ metadata:
 
 ## 9.4 QoS Class
 
+- Kubernetesがコンテナに対してoom scoreを設定する際に利用するもの
+
+### 9.4.1 BestEffort
+
+- リソース制限が一切ない状態にする
+
+### 9.4.2 Guaranteed
+
+### 9.4.3 Burstable
+
+- 最もよく設定されているQoS Class
+
 ## 9.5 ResourceQuota によるNamespace のリソースクォータ制限
 
+- 各Namespaceごと（仮想Kubernetesクラスタ）に利用可能なリソースを制限できる
+- 制限種別
+  - 作成可能なリソース数の制限
+  - リソース使用量の制限
+
+### 9.5.1 作成可能なリソース数の制限
+
+- `count/REAOURCE.GROUP`記法でリソース数を指定できる
+  - Deploymentの場合
+    - `count/deployments.apps`
+    - `count/deployments.extensions`
+
+### 9.5.2 リソース使用量の制限
+
+- リソースの使用量も制限できる
+
 ## 9.6 HorizontalPodAutoscaler（HPA）
+
+- 30病に1回の頻度でオートスケーリングするべきかのチェックを行う
+- レプリカ数の算出方法
+  - `ceil(sum(Podの現在のCPU使用率) / targetAverageUtilization)`
+- スケールアウトは最大3分に1回
+- スケールインは最大5分に1回
+- スケールアウトの条件式
+  - `avg(Podの現在のCPU使用率) / targetAverageutilization > 1.1`
+- スケールインの条件式
+  - `avg(Podの現在のCPU使用率) / targetAverageUtilization < 0.9`
+
+### 9.6.1 HorizontalPodAutoscalerのスケーリング動作の設定
+
+<!-- TODO -->
 
 ## 9.7 VerticalPodAutoscaler（VPA）
 
