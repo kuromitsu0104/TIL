@@ -329,6 +329,18 @@
   - [9.8 まとめ](#98-まとめ)
 - [第10章 ヘルスチェックとコンテナのライフサイクル](#第10章-ヘルスチェックとコンテナのライフサイクル)
   - [10.1 ヘルスチェック](#101-ヘルスチェック)
+    - [10.1.1 Liveness / Readiness / Startup Probe 3種類のヘルスチェック機構](#1011-liveness--readiness--startup-probe-3種類のヘルスチェック機構)
+    - [10.1.2 3種類のヘルスチェック方式](#1012-3種類のヘルスチェック方式)
+      - [コマンドベースのチェック(exec)](#コマンドベースのチェックexec)
+      - [HTTPベースのチェック(httpGet)](#httpベースのチェックhttpget)
+      - [TCPベースのチェック(tcpSocket)](#tcpベースのチェックtcpsocket)
+    - [10.1.3 ヘルスチェックの間隔](#1013-ヘルスチェックの間隔)
+    - [10.1.4 ヘルスチェックの作成](#1014-ヘルスチェックの作成)
+    - [10.1.5 Liveness Probeの失敗](#1015-liveness-probeの失敗)
+    - [10.1.6 Readiness Probeの失敗](#1016-readiness-probeの失敗)
+      - [追加のReady条件を追加する Pod ready++ (ReadinessGate)](#追加のready条件を追加する-pod-ready-readinessgate)
+      - [ReadinessProbeを無視したServiceの作成](#readinessprobeを無視したserviceの作成)
+    - [10.1.7 Startup Probeによる遅延チェックと失敗](#1017-startup-probeによる遅延チェックと失敗)
   - [10.2 コンテナのライフサイクルと再始動（restartPolicy）](#102-コンテナのライフサイクルと再始動restartpolicy)
   - [10.3 Init Containers](#103-init-containers)
   - [10.4 起動直後と終了直前に任意のコマンドを実行する（postStart ／ preStop）](#104-起動直後と終了直前に任意のコマンドを実行するpoststart--prestop)
@@ -2616,6 +2628,7 @@ metadata:
 
 ## 9.6 HorizontalPodAutoscaler（HPA）
 
+- 水平スケール： スケールアウト・スケールイン
 - 30病に1回の頻度でオートスケーリングするべきかのチェックを行う
 - レプリカ数の算出方法
   - `ceil(sum(Podの現在のCPU使用率) / targetAverageUtilization)`
@@ -2628,15 +2641,113 @@ metadata:
 
 ### 9.6.1 HorizontalPodAutoscalerのスケーリング動作の設定
 
-<!-- TODO -->
+- `spec.behavior`
+- リソース単位でオートスケーリングの頻度や増減可能なレプリカ数などを設定できる
 
 ## 9.7 VerticalPodAutoscaler（VPA）
 
+- 垂直スケール: スケールアップ・スケールダウン
+- コンテナに割り当てるCPU / メモリのリソース割り当てを自動的にスケールさせる機能のこと
+
 ## 9.8 まとめ
+
+- リソースマネジメント
+  - LimitRange: リソース割り当ての上限、下限、上限と下限の許容する乖離の割合、デフォルト値の設定
+  - ResourceQuota: リソース割り当てのクォータ
+- オートスケーリングの方式
+  - ClusterAutoscaler: Podを起動できるノードが存在しない場合、ノードを新規追加
+  - HorizontalPodAutoscaler: Podのレプリカ数を負荷に応じて自動的に増減
+  - VerticalPodAutoscaler: Podに割り当てられているリソース(Requests / Limits)を負荷に応じて自動的に増減
 
 # 第10章 ヘルスチェックとコンテナのライフサイクル
 
 ## 10.1 ヘルスチェック
+
+- Podの正常性判断のためのヘルスチェック機構のこと
+- `spec.restartPolicy`に従いPodを再起動する
+
+### 10.1.1 Liveness / Readiness / Startup Probe 3種類のヘルスチェック機構
+
+| Probeの種類 | 役割 | 失敗時の挙動 |
+| -- | -- | -- |
+| Liveness Probe | Pod内のコンテナが正常に動作しているかの確認 | コンテナを再起動する |
+| Readiness Probe | Podがリクエストを受け付けることができるかの確認 | トラフィックを流さない(Podを再起動しない) |
+| Startup Probe | Podの初回起動が完了したかの確認 | 他のProbeを実行し始めない |
+
+### 10.1.2 3種類のヘルスチェック方式
+
+- ヘルスチェックはコンテナごとに実行され、どれか一つのコンテナでも失敗した場合はPod全体が失敗したとみなす
+
+| ヘルスチェックの方式 | 内容 |
+| -- | -- |
+| exec | コマンドを実行し、終了コードが0でなければ失敗 |
+| httpGet | HTTP GETリクエストを実行し、Status Codeが200~399でなければ失敗 |
+| tcpSocket | TCPセッションが確立できなければ失敗 |
+
+#### コマンドベースのチェック(exec)
+
+```yaml
+livenessProbe:
+  exec:
+    command: ["test", "-e", "/ok.txt"]
+```
+
+#### HTTPベースのチェック(httpGet)
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 80
+    schema: HTTP
+    host: web.example.com
+    httpGeaders:
+    - name: Authorization
+      value: Bearer TOKEN
+```
+
+#### TCPベースのチェック(tcpSocket)
+
+```yaml
+livenessProbe:
+  tcpSocket:
+    port: 80
+```
+
+### 10.1.3 ヘルスチェックの間隔
+
+- 5種類のヘルスチェック間隔に関するパラメータが指定可能
+
+| 設定項目 | 内容 |
+| -- | -- |
+| initialDelaySeconds | 初回ヘルスチェック開始までの遅延（最大でperiodSecondsの分だけ延長する） |
+| periodSeconds | ヘルスチェック間隔の秒数 |
+| timeoutSeconds | タイムアウトまでの秒数 |
+| successThreshold | 成功と判断するまでのチェック回数 |
+| failureThreshold | 失敗と判断するまでのチェック回数 |
+
+```yaml
+livenessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 1
+```
+
+### 10.1.4 ヘルスチェックの作成
+
+### 10.1.5 Liveness Probeの失敗
+
+### 10.1.6 Readiness Probeの失敗
+
+#### 追加のReady条件を追加する Pod ready++ (ReadinessGate)
+
+#### ReadinessProbeを無視したServiceの作成
+
+### 10.1.7 Startup Probeによる遅延チェックと失敗
+
+<!-- TODO -->
 
 ## 10.2 コンテナのライフサイクルと再始動（restartPolicy）
 
