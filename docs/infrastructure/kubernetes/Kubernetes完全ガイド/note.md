@@ -368,10 +368,17 @@
     - [12.6.3 Gt / Ltオペレータ](#1263-gt--ltオペレータ)
   - [12.7 Node Anti-Affinity](#127-node-anti-affinity)
   - [12.8 Inter-Pod Affinity](#128-inter-pod-affinity)
+    - [12.8.1 特定のPodと必ず同じノード上で起動する](#1281-特定のpodと必ず同じノード上で起動する)
+    - [12.8.2 特定のPodと必ず同じゾーン上で起動し、可能な限り同じノード上で起動する](#1282-特定のpodと必ず同じゾーン上で起動し可能な限り同じノード上で起動する)
   - [12.9 Inter-Pod Anti-Affinity](#129-inter-pod-anti-affinity)
   - [12.10 複数の条件を組み合わせたPod のスケジューリング](#1210-複数の条件を組み合わせたpod-のスケジューリング)
   - [12.11 1.18 Beta TopologySpreadConstraints によるトポロジ均衡](#1211-118-beta-topologyspreadconstraints-によるトポロジ均衡)
   - [12.12 Taints とTolerations](#1212-taints-とtolerations)
+    - [12.12.1 Taintsの付与](#12121-taintsの付与)
+      - [PreferNoSchedule](#prefernoschedule)
+      - [NoSchedule](#noschedule)
+      - [NoExecute](#noexecute)
+    - [12.12.2 Tolerationsを指定したPodの起動](#12122-tolerationsを指定したpodの起動)
   - [12.13 PriorityClass によるPod の優先度と退避](#1213-priorityclass-によるpod-の優先度と退避)
   - [12.14 その他のスケジューリング](#1214-その他のスケジューリング)
   - [12.15 まとめ](#1215-まとめ)
@@ -2836,17 +2843,42 @@ livenessProbe:
 
 ## 12.7 Node Anti-Affinity
 
-<!-- TODO -->
+- Podを特定のノード以外へスケジューリングするポリシーのこと
 
 ## 12.8 Inter-Pod Affinity
 
+- 特定のPodが実行されているドメイン（ノード、ゾーンなど）上へPodをスケジューリングするポリシーのこと
+
+### 12.8.1 特定のPodと必ず同じノード上で起動する
+
+### 12.8.2 特定のPodと必ず同じゾーン上で起動し、可能な限り同じノード上で起動する
+
 ## 12.9 Inter-Pod Anti-Affinity
 
+- 特定のPodがいないドメイン（ノード、ゾーンなど）上で動作させるポリシーのこと
+
 ## 12.10 複数の条件を組み合わせたPod のスケジューリング
+
+- Node Affinity / Node Anti-Affinity / Inter-Pod Affinity / Inter-Pod Anti-Affinity は組み合わせることが可能
 
 ## 12.11 1.18 Beta TopologySpreadConstraints によるトポロジ均衡
 
 ## 12.12 Taints とTolerations
+
+- Kubernetes管理者が配置してほしくないノードを指定する方法
+- ノードに対して汚れ（Taints）を付けておき、それを許容（Tolerations）できるPodのみスケジューリングを許可するポリシー
+
+### 12.12.1 Taintsの付与
+
+- `kubectl taint`
+
+#### PreferNoSchedule
+
+#### NoSchedule
+
+#### NoExecute
+
+### 12.12.2 Tolerationsを指定したPodの起動
 
 ## 12.13 PriorityClass によるPod の優先度と退避
 
@@ -2857,6 +2889,8 @@ livenessProbe:
 # 第13章 セキュリティ
 
 ## 13.1 ServiceAccount
+
+<!-- TODO -->
 
 ## 13.2 RBAC（Role Based Access Control）
 
