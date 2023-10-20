@@ -9,7 +9,7 @@
 - [Inbox](#inbox)
 - [Algorithm](#algorithm)
 - [AWS](#aws)
-- [Database Design](#database-design)
+- [Database](#database)
 - [Framework](#framework)
 - [Infrastructure](#infrastructure)
 - [Language](#language)
@@ -32,9 +32,12 @@
 - RDS
   - [クレジット枯渇によるパフォーマンス低下問題について](/docs/aws/rds/クレジット枯渇によるパフォーマンス低下問題について/note.md)
 
-### Database Design
+### Database
 
-- [SQL アンチパターン](/docs/database_design/sql_antipatterns/note.md)
+- Design
+  - [SQL アンチパターン](/docs/database/design/sql_antipatterns/note.md)
+- SQL Server
+  - [トランザクション分離レベルについて](/docs/database/sql_server/transaction_isolation_level/note.md)
 
 ### Framework
 
