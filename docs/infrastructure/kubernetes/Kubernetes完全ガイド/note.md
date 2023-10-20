@@ -342,6 +342,9 @@
       - [ReadinessProbeを無視したServiceの作成](#readinessprobeを無視したserviceの作成)
     - [10.1.7 Startup Probeによる遅延チェックと失敗](#1017-startup-probeによる遅延チェックと失敗)
   - [10.2 コンテナのライフサイクルと再始動（restartPolicy）](#102-コンテナのライフサイクルと再始動restartpolicy)
+    - [10.2.1 Always](#1021-always)
+    - [10.2.2 OnFailure](#1022-onfailure)
+    - [10.2.3 Never](#1023-never)
   - [10.3 Init Containers](#103-init-containers)
   - [10.4 起動直後と終了直前に任意のコマンドを実行する（postStart ／ preStop）](#104-起動直後と終了直前に任意のコマンドを実行するpoststart--prestop)
   - [10.5 Pod の安全な停止とタイミング](#105-pod-の安全な停止とタイミング)
@@ -360,6 +363,9 @@
   - [12.4 nodeSelector（Simple Node Affinity）](#124-nodeselectorsimple-node-affinity)
   - [12.5 Node Affinity](#125-node-affinity)
   - [12.6 matchExpressions のオペレータとset-based 条件](#126-matchexpressions-のオペレータとset-based-条件)
+    - [12.6.1 In / NotInオペレータ](#1261-in--notinオペレータ)
+    - [12.6.2 Exists / DoesNotExistオペレータ](#1262-exists--doesnotexistオペレータ)
+    - [12.6.3 Gt / Ltオペレータ](#1263-gt--ltオペレータ)
   - [12.7 Node Anti-Affinity](#127-node-anti-affinity)
   - [12.8 Inter-Pod Affinity](#128-inter-pod-affinity)
   - [12.9 Inter-Pod Anti-Affinity](#129-inter-pod-anti-affinity)
@@ -2739,7 +2745,11 @@ livenessProbe:
 
 ### 10.1.5 Liveness Probeの失敗
 
+- Podを再起動する
+
 ### 10.1.6 Readiness Probeの失敗
+
+- Podへトラフィックを流さない
 
 #### 追加のReady条件を追加する Pod ready++ (ReadinessGate)
 
@@ -2747,13 +2757,32 @@ livenessProbe:
 
 ### 10.1.7 Startup Probeによる遅延チェックと失敗
 
-<!-- TODO -->
+- Podを再起動する
 
 ## 10.2 コンテナのライフサイクルと再始動（restartPolicy）
 
+- ヘルスチェック失敗時にコンテナを再起動するのかどうかを設定できる
+
+| restartPolicy | 内容 |
+| -- | -- |
+| Always | Podが停止すると、常にPodを再起動させる |
+| OnFailure | Podの停止が予期せぬ停止（終了コードが0以外）の場合、Podを再起動させる |
+| Never | Podが停止しても、Podを再起動させない |
+
+### 10.2.1 Always
+
+### 10.2.2 OnFailure
+
+### 10.2.3 Never
+
 ## 10.3 Init Containers
 
+- Pod内でメインとなるコンテナを起動する前に別のコンテナを起動させるための機能
+- `spec.initContainers[]`で複数指定可能で、上から順にコンテナが起動して`spec.initContainers[].command`を実行する
+
 ## 10.4 起動直後と終了直前に任意のコマンドを実行する（postStart ／ preStop）
+
+- コンテナの起動後と停止直前に任意のコマンドを実行できる
 
 ## 10.5 Pod の安全な停止とタイミング
 
@@ -2785,9 +2814,29 @@ livenessProbe:
 
 ## 12.5 Node Affinity
 
+- Podを特定のノード上へスケジューリングするポリシー
+  - ex: disktypeがSSDなノードに配置したい
+
 ## 12.6 matchExpressions のオペレータとset-based 条件
 
+### 12.6.1 In / NotInオペレータ
+
+- In: keyラベルの値がvaluesラベルのいずれかに一致する
+- NotIn: keyラベルの値がvaluesラベルのいずれにも一致しない
+
+### 12.6.2 Exists / DoesNotExistオペレータ
+
+- Exists: keyラベルが存在すること
+- DoesNotExist: keyラベルが存在しないこと
+
+### 12.6.3 Gt / Ltオペレータ
+
+- Gt: keyラベルの値がvaluesラベルの値よりも大きいこと
+- Gt: keyラベルの値がvaluesラベルの値よりも小さいこと
+
 ## 12.7 Node Anti-Affinity
+
+<!-- TODO -->
 
 ## 12.8 Inter-Pod Affinity
 
