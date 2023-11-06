@@ -69,6 +69,7 @@
 - [現場で役立つシステム設計の原則](/docs/software_design/現場で役立つシステム設計の原則/note.md)
 - [マイクロサービスにおける分散トランザクションについて](/docs/software_design/マイクロサービスにおける分散トランザクションについて/note.md)
 - [達人プログラマー](/docs/software_design/達人プログラマー/note.md)
+- [良いコード／悪いコードで学ぶ設計入門](/docs/software_design/良いコード／悪いコードで学ぶ設計入門/note.md)
 
 ### TypeScript
 
